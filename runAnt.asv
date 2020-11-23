@@ -1,0 +1,15 @@
+%% clear environment
+close all;
+clear;
+clc;
+
+%% full load data
+Ant0='FileUlLog_Instance0_Ant0.bin';
+Ant1='FileUlLog_Instance0_Ant1.bin';
+
+Ant0_IQ=readAnt(Ant0);
+Ant1_IQ=readAnt(Ant1);
+
+%% result
+Ant0_freq=PlotSpectrum(Ant0_IQ);
+Ant_freq=PlotSpectrum(Ant0_IQ);
