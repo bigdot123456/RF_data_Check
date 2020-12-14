@@ -20,8 +20,8 @@ IQ_float=csvread(Ant0);
 
 %% input parameter
 num_slot=20;
-mark_slotoffset=20;
-mark_symoffset=9;
+mark_slotoffset=0;
+mark_symoffset=8;
 mark_tsoffset=3785; % less then 4096
 
 %% const parameter
