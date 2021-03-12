@@ -5,4 +5,4 @@ base=max(freq);
 pos=base==0;
 base(pos)=1;
 freq(:,pos)=1;
-log_freq=10*log10(freq./base);
+log_freq=20*log10(freq./base);
