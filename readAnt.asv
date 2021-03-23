@@ -31,10 +31,7 @@ end
  %scatterplot([Ia(view_range),Qa(view_range)]);
  
  IQ_full=Ia+1i*Qa;
- tab_ext=repmat(tab(1:14),len_sym,1);
- tab_ext=reshape(tab_ext,14*len_sym,1);
- tab_ext_full=repmat(tab_ext,No_slot,1);
- IQ_pc=IQ_full.*tab_ext_full;
- IQ=reshape(IQ_pc,len_sym,No_slot*14);
+ tab_pc_ext=repmat(tab_pc(1:14),
+ IQ=reshape(IQ_full,len_sym,No_slot*14);
  
  
