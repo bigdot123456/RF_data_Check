@@ -73,7 +73,7 @@ for i=1:14
        subplot(5,4,16);
        plot(Id(2:2:len),Qd(2:2:len),'.');
        title(str);
-       phase=derotate(cpx);display(phase);
+       %phase=derotate(cpx);display(phase);
        %
     end
     if i==12
