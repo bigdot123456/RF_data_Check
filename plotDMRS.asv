@@ -58,6 +58,7 @@ title(str);
 %phase=derotate(cpx);display(phase);
 %
 %% find best angle phase
+str=sprintf('Plot slot %d dmrs0 angle',v_slot);
 cpx00=abs(Id)+1j*abs(Qd);
 p0_ang=angle(cpx00);
 figure
@@ -68,23 +69,33 @@ subplot(2,1,2);
 plot(p0_ang(2:2:len),'.');
 title(str);
 
-plot(p0_ang,'.');
-hold on;grid on;
-title('orginal phase view');
-
-
 %% second symbol
 i=12;
 cpx=Ant_view(:,i+v_slot*14);
 Id=real(cpx);
 Qd=imag(cpx);
+cpx00=abs(Id)+1j*abs(Qd);
+p0_ang=angle(cpx00);
+
+figure('NumberTitle', 'on', 'Name', str);
+str=sprintf('Plot slot %d dmrs %d angle',v_slot,i);
 subplot(2,1,1);
 plot(Id(1:2:len),Qd(1:2:len),'.');
 title(str);
 subplot(2,1,2);
 plot(Id(2:2:len),Qd(2:2:len),'.');
 title(str);
-%phase=derotate(cpx);display(phase);
 
+%% find best angle phase
+anglestr=sprintf('Plot slot %d dmrs %d angle',v_slot,i);
+figure
+subplot(2,1,1);
+plot(p0_ang(1:2:len),'.');
+title(anglestr);
+subplot(2,1,2);
+plot(p0_ang(2:2:len),'.');
+title(anglestr);
+
+%phase=derotate(cpx);display(phase);
 end
 

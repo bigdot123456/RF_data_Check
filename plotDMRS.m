@@ -41,46 +41,60 @@ str=sprintf('pilot ant1 symbol12');
 title(str);
 
 
-%% scatter 画星座图
-str=sprintf('Plot slot %d Constellation',v_slot);
-figure('NumberTitle', 'on', 'Name', str);
-
+%% second symbol
 i=3;
 cpx=Ant_view(:,i+v_slot*14);
 Id=real(cpx);
 Qd=imag(cpx);
-subplot(2,1,1);
-plot(Id(1:2:len),Qd(1:2:len),'.');
-title(str);
-subplot(2,1,2);
-plot(Id(2:2:len),Qd(2:2:len),'.');
-title(str);
-%phase=derotate(cpx);display(phase);
-%
-%% find best angle phase
-str=sprintf('Plot slot %d angle',v_slot);
 cpx00=abs(Id)+1j*abs(Qd);
 p0_ang=angle(cpx00);
+%% plot constellation & angle phase
+constellationstr=sprintf('Plot slot %d dmrs %d constellation',v_slot,i);
+anglestr=sprintf('Plot slot %d dmrs %d angle',v_slot,i);
+
+figure('NumberTitle', 'on', 'Name', str);
+subplot(2,1,1);
+plot(Id(1:2:len),Qd(1:2:len),'.');
+title(constellationstr);
+subplot(2,1,2);
+plot(Id(2:2:len),Qd(2:2:len),'.');
+title(constellationstr);
+
 figure
 subplot(2,1,1);
 plot(p0_ang(1:2:len),'.');
-title(str);
+title(anglestr);
 subplot(2,1,2);
 plot(p0_ang(2:2:len),'.');
-title(str);
+title(anglestr);
+%phase=derotate(cpx);display(phase);
 
 %% second symbol
 i=12;
 cpx=Ant_view(:,i+v_slot*14);
 Id=real(cpx);
 Qd=imag(cpx);
+cpx00=abs(Id)+1j*abs(Qd);
+p0_ang=angle(cpx00);
+%% plot constellation & angle phase
+constellationstr=sprintf('Plot slot %d dmrs %d constellation',v_slot,i);
+anglestr=sprintf('Plot slot %d dmrs %d angle',v_slot,i);
+
+figure('NumberTitle', 'on', 'Name', str);
 subplot(2,1,1);
 plot(Id(1:2:len),Qd(1:2:len),'.');
-title(str);
+title(constellationstr);
 subplot(2,1,2);
 plot(Id(2:2:len),Qd(2:2:len),'.');
-title(str);
-%phase=derotate(cpx);display(phase);
+title(constellationstr);
 
+figure
+subplot(2,1,1);
+plot(p0_ang(1:2:len),'.');
+title(anglestr);
+subplot(2,1,2);
+plot(p0_ang(2:2:len),'.');
+title(anglestr);
+%phase=derotate(cpx);display(phase);
 end
 
