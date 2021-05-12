@@ -1,4 +1,4 @@
-function [d_ang_min_norm]=DecodeSingleDMRS(cpx)
+function [cpx_pc,d_ang_min_norm]=DecodeSingleDMRS(cpx)
 %% this function is decode dmrs
 len=length(cpx);
 std_threshold=pi/8;
@@ -20,11 +20,11 @@ d_ang_min(pos)=0;
 
 %% use standard average to get phase error
 d_ang_min_norm=d_ang_min./I;
-fc=sum(d_ang_min_norm)/(length(d_ang_min_norm)-length(pos));
+fc=sum(d_ang_min_norm)/(length(d_ang_min_norm)-sum(pos));
 
 %% phase correction
-pc=exp(-fc*(0:len-1));
-cpx_pc=cpx.*pc;
+pc=exp(1i*-fc*(0:len-1));
+cpx_pc=cpx.*pc';
 ang_pc=angle(cpx_pc);
 %% plot all debug info
 figure;plot(ang,'.');
@@ -32,8 +32,8 @@ hold on;
 plot(ang_pc,'*');
 title("orignal angle plot");grid on;
 
-figure;plot(d_ang,'.');
-title("diff angle plot");grid on;
+figure;plot(ang_pc,'.');
+title("phase correct angle plot");grid on;
 
 figure;plot(d_ang_min,'.');
 title("mini diff angle plot");grid on;

@@ -43,12 +43,12 @@ function [ant0_fc,ant1_fc]=plotDMRS(Ant_view,v_slot)%,len)
 i=3;
 fprintf("Decode DMRS with slot %d & %d symbol \n",v_slot,i);
 cpx=Ant_view(:,i+v_slot*14);
-ant0_fc=DecodeDMRS(cpx);
+[cpx_pc1,ant0_fc]=DecodeDMRS(cpx);
 
 i=12;
 fprintf("Decode DMRS with slot %d & %d symbol \n",v_slot,i);
 cpx=Ant_view(:,i+v_slot*14);
-ant1_fc=DecodeDMRS(cpx);
+[cpx_pc2,ant1_fc]=DecodeDMRS(cpx);
 
 % Id=real(cpx);
 % Qd=imag(cpx);
