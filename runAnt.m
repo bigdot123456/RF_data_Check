@@ -18,7 +18,7 @@ upath0='/Users/liqinghua/RF_data/phylog_20210218_0658_UL_90M_IQ/data/';
 upath0='/Users/liqinghua/log/bug1138/data/';
 upath0='/Users/liqinghua/RF_data/phylog_20210322_0730_80M_/data/';
 upath0='/Users/liqinghua/RF_data/phylog_20210322_0728_170M_/data/';
-upath0='/Users/liqinghua/RF_data/phylog_20210323_0849/data/';
+upath0='/Users/liqinghua/RF_data/phylog_20210417_0910/data/';
 
 ufile_ant0='FileUlLog_Instance0_Ant0.bin';
 ufile_ant1='FileUlLog_Instance0_Ant1.bin';
@@ -54,7 +54,7 @@ Ant_view=Ant0_IQ;
 % conjugate should be 1
 % f0 is set to 26550000 Hz
 %% plot all data
-for i=9:10
+for i=1:14
     plotConstellation(Ant_view,i);
 end
 
