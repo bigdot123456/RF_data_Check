@@ -23,7 +23,7 @@ t1=t_min.*t1;
 f_max=max(f0);
 f_min=min(f0);
 if f_min==-inf
-    f_min=f_max-60;
+    f_min=f_max-100;
 end
 f1=f_min.*f1;
 
@@ -32,19 +32,19 @@ for i=1:28
     t1(i*4096)=t_max+10;
 end
 %% plot works
-str=sprintf('pan view of signal with %d point',length(Ant_view));
+str=sprintf('pan view continuous timing signal with %d point',length(Ant_view));
 figure('NumberTitle', 'on', 'Name', str);
 plot(abs(Ant_view));
 title(str);
 grid on;
 
-str=sprintf('time frequency spectrum with %d point',4096);
+str=sprintf('symbol time frequency spectrum with %d point',4096);
 figure('NumberTitle', 'on', 'Name', str);
 plot(t0,'.r');hold on;
 plot(t1,'b');
 title(str);
 grid on;
-str=sprintf('frequency spectrum with %d point',4096);
+str=sprintf('symbol frequency spectrum with %d point',4096);
 figure('NumberTitle', 'on', 'Name', str);
 plot(f0,'r');hold on;
 plot(f1,'b');

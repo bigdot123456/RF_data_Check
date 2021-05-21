@@ -20,7 +20,7 @@ for i=1:14
     
     %scatter(Id,Qd);
     plot(Id(1:len),Qd(1:len),'.');
-    str=sprintf('symbol:%d',i);
+    str=sprintf('symbol:%d len:%d',i,len);
     title(str);
     %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
     grid on;
