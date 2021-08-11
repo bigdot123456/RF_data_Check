@@ -1,0 +1,160 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration file="/Users/liqinghua/git/RF_Data_check/runAnt.prj" location="/Users/liqinghua/git/RF_Data_check" name="runAnt" target="target.ezdeploy.standalone" target-name="Application Compiler">
+    <param.appname>runAnt</param.appname>
+    <param.icon />
+    <param.icons />
+    <param.version>1.0</param.version>
+    <param.authnamewatermark>bigdot</param.authnamewatermark>
+    <param.email>bigdot@126.com</param.email>
+    <param.company>China</param.company>
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.guid />
+    <param.installpath.string>/China/runAnt/</param.installpath.string>
+    <param.installpath.combo>option.installpath.systemwideapp</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.target.install.notes>In the following directions, replace MR/v98 by the directory on the target machine where MATLAB is installed, or MR by the directory where the MATLAB Runtime is installed.
+
+If the environment variable DYLD_LIBRARY_PATH is undefined, set it to the following string:
+
+MR/v98/runtime/maci64:MR/v98/sys/os/maci64:MR/v98/bin/maci64
+
+If it is defined, set it to the following:
+
+${DYLD_LIBRARY_PATH}:MR/v98/runtime/maci64:MR/v98/sys/os/maci64:MR/v98/bin/maci64</param.target.install.notes>
+    <param.intermediate>${PROJECT_ROOT}/runAnt/for_testing</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}/runAnt/for_redistribution_files_only</param.files.only>
+    <param.output>${PROJECT_ROOT}/runAnt/for_redistribution</param.output>
+    <param.logdir>${PROJECT_ROOT}/log</param.logdir>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.support.packages />
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>false</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <param.native.matlab>false</param.native.matlab>
+    <param.checkbox>false</param.checkbox>
+    <param.example />
+    <param.help.text>Syntax 
+	  -? 
+	 
+ Input Arguments 
+	 -?  print help on how to use the application 
+	 input arguments</param.help.text>
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.version />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.install.notes />
+      <param.intermediate />
+      <param.files.only />
+      <param.output />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.target.type />
+      <param.support.packages />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+      <param.native.matlab />
+      <param.checkbox />
+      <param.example />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}/runAnt.mlx</file>
+    </fileset.main>
+    <fileset.resources />
+    <fileset.package />
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}/CHEDMRS.m</file>
+      <file>${PROJECT_ROOT}/DecodeDMRS.m</file>
+      <file>${PROJECT_ROOT}/DecodeSingleDMRS.m</file>
+      <file>${PROJECT_ROOT}/PlotSeqSpectrum.m</file>
+      <file>${PROJECT_ROOT}/PlotSpectrum.m</file>
+      <file>${PROJECT_ROOT}/phy_gnb_main_init_phase_compensation_table.m</file>
+      <file>${PROJECT_ROOT}/plot1SymbolConstellation.m</file>
+      <file>${PROJECT_ROOT}/plotConstellation.m</file>
+      <file>${PROJECT_ROOT}/plotDMRS.m</file>
+      <file>${PROJECT_ROOT}/readAnt.m</file>
+    </fileset.depfun>
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}/runAnt/for_testing" name="readme.txt" optional="true">/Users/liqinghua/git/RF_Data_check/runAnt/for_testing/readme.txt</file>
+      <file location="${PROJECT_ROOT}/runAnt/for_testing" name="run_runAnt.sh" optional="false">/Users/liqinghua/git/RF_Data_check/runAnt/for_testing/run_runAnt.sh</file>
+      <file location="${PROJECT_ROOT}/runAnt/for_testing" name="runAnt.app" optional="false">/Users/liqinghua/git/RF_Data_check/runAnt/for_testing/runAnt.app</file>
+      <file location="${PROJECT_ROOT}/runAnt/for_testing" name="splash.png" optional="false">/Users/liqinghua/git/RF_Data_check/runAnt/for_testing/splash.png</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>/Users/liqinghua/R2020a</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="polyspacebugfinder" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <polyspacebugfinder>
+          <enabled>true</enabled>
+        </polyspacebugfinder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>true</unix>
+      <mac>true</mac>
+      <windows>false</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.16</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>maci64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

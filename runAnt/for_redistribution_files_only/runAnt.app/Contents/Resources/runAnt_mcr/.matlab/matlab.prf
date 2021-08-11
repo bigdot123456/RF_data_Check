@@ -1,0 +1,29 @@
+#MATLAB Preferences
+#Mon May 17 11:51:37 CST 2021
+DeploytoollastOpenFile=S
+MatlabExitConfirm=Bfalse
+EditorNamedBufferOption=I2
+RLOrderB2_VE_2014b_1=S0:1:
+RLHiddenB2_VE_2014b_1=I8184
+DeploytoolrecentProjects=S/Users/liqinghua/git/RF_Data_check/untitled1.prj
+RLOrderB2_WB_2014b_1=S0:1:
+RLHiddenB2_WB_2014b_1=I16376
+pEZDeployDefaultCompany=SChina
+pEZDeployDefaultAuthor=Sbigdot
+CommandWindowClearConfirmation=Btrue
+RLWidthB2_VE_2014b_1_1=I130
+RLWidthB2_VE_2014b_1_0=I130
+RLPrevInitB2_VE_2014b_1=Btrue
+RLWidthB2_WB_2014b_1_1=I130
+RLWidthB2_WB_2014b_1_0=I130
+EditorMRU8=S/Users/liqinghua/R2020a/toolbox/matlab/ops/bitshift.m
+EditorMRU7=S/Users/liqinghua/git/5g-nr-pusch/nr_phy/nr_pusch_receive.m
+EditorMRU6=S/Users/liqinghua/git/5g-nr-pusch/test_ofdm_nRRU.m
+EditorMRU5=S/Users/liqinghua/git/5g-nr-pusch/run_5gnr_sim_sweep.m
+EditorMRU4=S/Users/liqinghua/git/5g-nr-pusch/nr_common/nr_sch_link_level_sim.m
+EditorMRU3=S/Users/liqinghua/git/5g-nr-pusch/estimation/estimate_cfo_from_pilots.m
+EditorMRU2=S/Users/liqinghua/git/5g-nr-pusch/estimation/channel_estimate_SIMO.m
+EditorMRU1=S/Users/liqinghua/git/RF_Data_check/readAnt.m
+pEZDeployDefaultEmail=Sbigdot@126.com
+RLPrevInitB2_WB_2014b_1=Btrue
+HasAppendedMlxToFileExtensionsKey=Btrue
