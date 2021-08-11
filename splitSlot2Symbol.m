@@ -13,10 +13,10 @@ len_sym=(len_fft+len_scp);%% normal cp, should 288, long cp should be 352
 len_ts_per_slot=(len_slot*len_sym+len_lcp-len_scp)*len_IQ;
 
 sframe0=SlotIn(1:len_ts_per_slot);
-sframe1=SlotIn(len_ts_per_slot+1:2*len_ts_per_slot);
+%sframe1=SlotIn(len_ts_per_slot+1:2*len_ts_per_slot);
 
 SymbolOut0=zeros(len_fft,len_slot);
-SymbolOut1=zeros(len_fft,len_slot);
+%SymbolOut1=zeros(len_fft,len_slot);
 
 SymbolOut0(:,1)=sframe0(len_lcp/2:len_lcp/2+len_fft-1);
 for i=2:len_slot
@@ -25,13 +25,13 @@ for i=2:len_slot
     SymbolOut0(:,i)=sframe0(p0:p1);
 end
 
-SymbolOut1(:,1)=sframe1(len_lcp/2:len_lcp/2+len_fft-1);
-for i=2:len_slot
-    p0=len_lcp+len_fft+(i-2)*len_sym+len_scp;
-    p1=p0+len_fft-1;
-    SymbolOut1(:,i)=sframe1(p0:p1);
-end
-
-SymbolOut=[SymbolOut0,SymbolOut1];
-
+% SymbolOut1(:,1)=sframe1(len_lcp/2:len_lcp/2+len_fft-1);
+% for i=2:len_slot
+%     p0=len_lcp+len_fft+(i-2)*len_sym+len_scp;
+%     p1=p0+len_fft-1;
+%     SymbolOut1(:,i)=sframe1(p0:p1);
+% end
+% 
+% SymbolOut=[SymbolOut0,SymbolOut1];
+SymbolOut=SymbolOut0;
 end

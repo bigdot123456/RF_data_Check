@@ -7,7 +7,7 @@ elseif nargin==2
     len=3276;
 end
 %% start figure
-str=sprintf('Plot slot %d Constellation',v_slot);
+str=sprintf('Plot slot %d Constellation with %d point',v_slot,len);
 figure('NumberTitle', 'on', 'Name', str);
 for i=1:14
     subplot(5,4,i);

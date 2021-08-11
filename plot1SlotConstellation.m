@@ -9,7 +9,7 @@ end
 
 Ant_freq=PlotSpectrum(Ant_view);
 %% frequency figure demo
-str=sprintf('Plot slot %d freq',v_slot);
+str=sprintf('Plot slot %d freq with %d point',v_slot,len);
 figure('NumberTitle', 'on', 'Name', str);
 %figure('NumberTitle', 'off', 'Name', str);
 for i=1:14
