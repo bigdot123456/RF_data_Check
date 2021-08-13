@@ -1,0 +1,82 @@
+% load('C:\liuyang\matlab_test\matlab分析频域数据\t_iq.mat');
+load('t_iq.mat');
+centralFreqHz = 3500000000;%中心频点，单位Hz
+coeff = phase_coeff(3500000000,1);%Rx 1;Tx -1
+% print_iq(t_iq);
+ 
+t_withoutCP = removeCP(t_iq); %去CP
+ re_iq = real(t_withoutCP);
+ im_iq = imag(t_withoutCP);
+ data_I = ceil(re_iq*2^15);
+ data_Q = ceil(im_iq*2^15);
+
+
+t_withoutCP = t_withoutCP.*coeff; %相位补偿
+fiq = T2F_FFT(t_withoutCP); %FFT及PRB compression
+
+function t_noCP = removeCP(t_addCP)
+  cplength = [352 288 288 288 288 288 288 288 288 288 288 288 288 288];
+  startsample_perSymbol = [0	4448	8832	13216	17600	21984	26368	30752	35136	39520	43904	48288	52672	57056	61440];
+  nNrofsampleperSlot = 14*4096+sum(cplength);
+  
+  nColumn = length(t_addCP)/nNrofsampleperSlot * 14;
+  cp_pos = [];
+  for Idx = 0:nColumn-1 
+      symb_Idx = mod(Idx,14)+1;      
+      cp_pos_perSymb = [];
+      cp_pos_perSymb = startsample_perSymbol(symb_Idx)+[0:cplength(symb_Idx)-1]+1 +floor(Idx/14)*nNrofsampleperSlot;
+      cp_pos = [cp_pos cp_pos_perSymb];
+  end
+  t_CPremoved = t_addCP;
+  t_CPremoved(cp_pos) = [];
+  t_noCP = reshape(t_CPremoved,4096,[]);
+end
+
+function fiq = T2F_FFT(t_CPremoved)
+	phy_sc_index=[0:273*12-1]-273*12/2;
+	phy_sc_index = mod(phy_sc_index,4096)+1;
+	[frow,fcolumn] = size(t_CPremoved);
+  t_RnFFTCAntSymb = t_CPremoved;
+
+  f4096 = fft(t_RnFFTCAntSymb,4096);%FFT结果,4096点
+  fiq = f4096(phy_sc_index,:);      %取273 PRB后的结果 3276点
+end
+
+function coeff = phase_coeff(centralFreqHz,trx)
+    %仅针对 30KHz ,tx -1;rx 1
+  j=sqrt(-1);
+  Tc = 1/(480000*4096);
+  cplength = [352 288 288 288 288 288 288 288 288 288 288 288 288 288];
+  startsample_perSymbol = [0	4448	8832	13216	17600	21984	26368	30752	35136	39520	43904	48288	52672	57056];
+  tmp = trx*(startsample_perSymbol+cplength)*16*Tc*2*pi*centralFreqHz;
+  coeff = exp(j*tmp); 
+end
+
+function print_iq(t_iq)
+ re_iq = real(t_iq);
+  im_iq = imag(t_iq);
+  data_I = ceil(re_iq*2^15);
+  data_Q = ceil(im_iq*2^15);
+  for i = 1:61440
+    if (data_I(i)>=0)
+        data_I_c(i) = data_I(i);
+    else
+        data_I_c(i) = data_I(i) + 65536;
+    end
+    if (data_Q(i)>=0)
+        data_Q_c(i) = data_Q(i);
+    else
+        data_Q_c(i) = data_Q(i) + 65536;
+    end
+  end
+  data_I_H = dec2hex(data_I_c);
+  data_Q_H = dec2hex(data_Q_c);
+  str_out = [data_I_H,data_Q_H];
+  str_out1 = str_out.';
+  fid1=fopen('.\data_src_1slot.txt','w');
+  fprintf(fid1,'%c%c%c%c%c%c%c%c\n',str_out1);    
+  fclose (fid1);
+end
+
+
+
