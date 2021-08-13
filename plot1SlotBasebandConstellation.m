@@ -1,13 +1,30 @@
-function Ant_freq=plot1SlotBasebandConstellation(Ant_view,slot_num)
+function Ant_freq=plot1SlotBasebandConstellation(Ant_view,slot_num,en_phase_comp)
 if nargin==1
     slot_num=0;
+    en_phase_comp = 0;
+elseif nargin==2
+    en_phase_comp = 1;
+    fprintf("Open phase compensation");
 end
+%% get phase compensation coeffcient
+% centralFreqHz = 3500000000;%中心频点，单位Hz
+% centralFreqHz = 2496000000;%%%ARFCN  499200
+centralFreqHz = 2566890000;%%%ARFCN  513378  移动
+% centralFreqHz = 3549540000;%%%ARFCN  636636  联通
+coeff = phase_coeff(centralFreqHz,1);%Rx 1;Tx -1
+
 %% plot slot frequency & constellation result
 symbol=splitSlot2Symbol(Ant_view);
 slotSymbNum=14;
 
+if ( en_phase_comp == 1 )
+    symbolPC = symbol(:,1:slotSymbNum).*coeff; %相位补偿
+else
+    symbolPC = symbol;
+end
+
 % data should be symbol(1:4096,1:14)
-symbol_freq_org=fft(symbol); 
+symbol_freq_org=fft(symbolPC); 
 symbol_freq=fftshift(symbol_freq_org);
 
 % symbol_freq_org=zeros(size(symbol));

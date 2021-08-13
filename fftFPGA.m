@@ -35,8 +35,8 @@ generics.C_HAS_ROUNDING = 1; % Set to 0 if C_USE_FLT_PT = 1    0 = truncation,  
   
   [output, blkexp,overflow] = xfft_v9_1_bitacc_mex(generics, nfft, fftfxpt, scaling_sch, direction);
   if overflow
-      sprintf("overflow is occured! block exp is %d",blkexp);
+      fprintf("overflow is occured! block exp is %d",blkexp);
   end
   fftOut=output;
-
+  fprintf("FFT result is %d, Overflow status is %d",blkexp,overflow);
 end
