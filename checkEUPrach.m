@@ -2,6 +2,9 @@
 clear;
 clc;
 close all;
+%allFolds = genpath( pwd );
+addpath('./RX_MATLAB');
+%% load EU input data
 load matlab1029.mat
 load caps.mat
 %%
@@ -19,7 +22,7 @@ Ant_view=ant0;
 slotTsLen=61440;
 %% view all slot
 totalSlotNum=ceil(length(Ant_view)/slotTsLen);
-for i=20:totalSlotNum
+for i=21:totalSlotNum
     %freq=plot1msBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
     plot1SlotBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
 end
@@ -37,6 +40,10 @@ symb=Ant_view(end-offset-cp/2+1:end-offset-cp/2+len);
 symb_freq=fft(symb);
 symb_freq1=fftshift(symb_freq);
 plot1SymbolConstellation(symb_freq1,4096);
+
+symb_freqFPGA=fftFPGA(symb);
+symb_freqFPGA1=fftshift(symb_freqFPGA);
+plot1SymbolConstellation(symb_freqFPGA1,4096);
 %% compare with FPGA result
 str=sprintf('Plot caps 35 Freqency spectrum');
 figure('NumberTitle', 'on', 'Name', str);
