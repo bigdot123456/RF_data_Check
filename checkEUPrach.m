@@ -4,9 +4,14 @@ clc;
 close all;
 %allFolds = genpath( pwd );
 addpath('./RX_MATLAB');
+t=now;
+datestr(t,0)
 %% load EU input data
-load matlab1029.mat
 load caps.mat
+%load matlab1029.mat
+%load './cap_data/matlab4.mat'
+%load 'matlab1714.mat'
+load 'matlab1655.mat'
 coeff = phase_coeff;
 %%
 % figure;
@@ -14,25 +19,42 @@ coeff = phase_coeff;
 % grid on;
 % title('FPGA freqency log Data,6-agc does not work');
 %% seperate AntData
-ant0=AntData(:,1);
-ant1=AntData(:,3);
-figure;plot(abs(ant0));title("Timing Pan View of Ant data");grid on; 
+ant0=t1AntData(:,1);
+ant1=t1AntData(:,3);
+str=sprintf('Plot Ant0 full view');
+figure('NumberTitle', 'on', 'Name', str);grid on;
+plot(abs(ant0));title("Timing Pan View of Ant data");grid on; 
 Ant_view=ant0;
 %% split to symbol
 % symAll=splitSlot2Symbol(Ant_view);
 slotTsLen=61440;
 %% view all slot
-totalSlotNum=ceil(length(Ant_view)/slotTsLen);
+totalSlotNum=ceil(length(ant0)/slotTsLen);
 
 for i=21:totalSlotNum
     %freq=plot1msBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
-    plot1SlotBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
+    tRange=(i-1)*slotTsLen+1:i*slotTsLen;
+    plot1SlotBasebandConstellation(ant0(tRange),i-1,0);
+    plot1SlotBasebandConstellation(ant1(tRange),i-1,1);
 end
 %% view special slot
 % slotN=19;
 % i=slotN+1;
 % freqN=plot1SlotBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
 
+%% view EU frequecy domain result
+fant0=f1AntData(:,1);
+fant1=f1AntData(:,3);
+
+slotFsLen=3276*14;
+for i=20:totalSlotNum
+    fRange=(i-1)*slotFsLen+1:i*slotFsLen;
+    Ant_view0=fant0(fRange);
+    Ant_view1=fant1(fRange);
+    
+    [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation(Ant_view0,i-1,0);
+    [symbol1,symbol_abs1]=plot1SlotFreqencySignalConstellation(Ant_view1,i-1,1);
+end
 %% view last slot any symbol
 viewSymbNum=1;
 len=4096;
@@ -49,7 +71,8 @@ symb_freq=fft(symbPC);
 symb_freq1=fftshift(symb_freq);
 plot1SymbolConstellation(symb_freq1,4096,'MATLAB');
 
-symb_freqFPGA=fftFPGA(symbPC);
+%symb_freqFPGA=fftFPGA(symbPC);
+symb_freqFPGA=fft(symbPC);
 symb_freqFPGA1=fftshift(symb_freqFPGA);
 plot1SymbolConstellation(symb_freqFPGA1,4096,'FPGA FFT');
 %% compare with FPGA result
@@ -67,12 +90,9 @@ plot(20*log10(abs(symb_freqFPGA1))+96,'.r');
 grid on;
 title('FPGA 64 & FFT Bit ACC freqency log Data,6-agc does not work');
 %% get PRACH data
-P_index=254;
-P_prbNum=12;
 slotN=19;
-
 i=slotN+1;
 %P_SlotData=Ant_view(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
 %k1=
-dist=P_index*12;
+%dist=P_index*12;
 

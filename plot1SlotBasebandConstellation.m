@@ -1,10 +1,20 @@
-function Ant_freq=plot1SlotBasebandConstellation(Ant_view,slot_num,en_phase_comp)
+function [symbolPC,symbol_abs,symbol_freq,symbol_freq_abs]=plot1SlotBasebandConstellation(Ant_view,slot_num,ant_num,en_phase_comp)
+% function [symbolPC,symbol_abs,symbol_freq,symbol_freq_abs]=plot1SlotBasebandConstellation(Ant_view,slot_num,ant_num,en_phase_comp)
+% here symbolPC: timing domain result for Ant_view with phase correction
+% here symbol_abs: 20*log(symbolPC)
+% symbol_freq: fft result of symbolPC
+% symbol_freq_abs: 20 log result of symbol_freq 
 if nargin==1
     slot_num=0;
+    ant_num=0;
     en_phase_comp = 0;
 elseif nargin==2
+    ant_num=0;
     en_phase_comp = 1;
-    fprintf("Open phase compensation");
+    fprintf("Open phase compensation!\n");
+elseif nargin==3
+    en_phase_comp = 1;
+    fprintf("Open phase compensation!\n");
 end
 %% get phase compensation coeffcient
 % centralFreqHz = 3500000000;%中心频点，单位Hz
@@ -12,7 +22,6 @@ end
 centralFreqHz = 2566890000;%%%ARFCN  513378  移动
 % centralFreqHz = 3549540000;%%%ARFCN  636636  联通
 coeff = phase_coeff(centralFreqHz,1);%Rx 1;Tx -1
-
 %% plot slot frequency & constellation result
 symbol=splitSlot2Symbol(Ant_view);
 slotSymbNum=14;
@@ -22,21 +31,32 @@ if ( en_phase_comp == 1 )
 else
     symbolPC = symbol;
 end
-
+%% check zero power
+zerobit=0;
+if(slot_num==19)
+   pos=find(symbolPC==0); 
+   if isempty(pos)
+       zerobit=0;
+   else
+       fprintf("zerobit index is %d\n",pos);
+       zerobit=1;
+   end
+end
+%% fft process
 % data should be symbol(1:4096,1:14)
-symbol_freq_org=fft(symbolPC); 
-symbol_freq=fftshift(symbol_freq_org);
+% symbol_freq_org=fft(symbolPC); 
+% symbol_freq=fftshift(symbol_freq_org);
 
-% symbol_freq_org=zeros(size(symbol));
-% symbol_freq=symbol_freq_org;
-% %% ifft to get frequency data
-% for i=1:slotSymbNum
-%    symbol_freq_org(:,i)=fft(symbol(:,i)); 
-%    symbol_freq(:,i)=fftshift(symbol_freq_org(:,i));
-% end
+symbol_freq_org=zeros(size(symbol));
+symbol_freq=symbol_freq_org;
+%% ifft to get frequency data
+for i=1:slotSymbNum
+   symbol_freq_org(:,i)=fft(symbolPC(:,i)); 
+   symbol_freq(:,i)=fftshift(symbol_freq_org(:,i));
+end
 %% start compare time domain & frequency domain analsys
 MIN=-120;
-symbol_abs=20*log10(abs(symbol));
+symbol_abs=20*log10(abs(symbolPC));
 symbol_abs(symbol_abs==-inf)=MIN;
 symbol_freq_abs=20*log10(abs(symbol_freq));
 symbol_freq_abs(symbol_freq_abs==-inf)=MIN;
@@ -77,9 +97,9 @@ for i=1:slotSymbNum
     t1(i*4096)=t_max+10;
 end
 %% plot works
-str=sprintf('slot %d continuous timing signal with %d point ',slot_num,length(Ant_view));
+str=sprintf('Ant%d slot %d continuous timing signal with %d point and zeronum %d',ant_num,slot_num,length(Ant_view),zerobit);
 figure('NumberTitle', 'on', 'Name', str);
-mesh(abs(symbol),'FaceAlpha','0.5');
+mesh(abs(symbolPC),'FaceAlpha','0.5');
 x1=xlabel('Symbol Direction: 1 -> 14');       
 x2=ylabel('Sample Timing Direction: 1 -> 6144');       
 x3=zlabel('Sample value scale in original scale');       
@@ -89,7 +109,7 @@ set(x2,'Rotation',-30);
 title(str);
 grid on;
 
-str=sprintf('slot %d symbol IQ abs log power timing series with %d point',slot_num,4096);
+str=sprintf('Ant%d slot %d symbol IQ abs log power timing series with %d point',ant_num,slot_num,4096);
 figure('NumberTitle', 'on', 'Name', str);
 % plot(t0,'.r');hold on;
 % plot(t1,'b');
@@ -110,7 +130,7 @@ grid on;
 % grid on;
 
 %% plot every symbol spectrum
-str=sprintf('slot %d symbol freq log power with %d subcarrier',slot_num,4096);
+str=sprintf('Ant%d slot %d symbol freq log power with %d subcarrier',ant_num,slot_num,4096);
 figure('NumberTitle', 'on', 'Name', str);
 s=mesh(symbol_freq_abs,'FaceAlpha','0.5');
 %s.FaceColor = 'flat';
@@ -122,7 +142,7 @@ x3=zlabel('sc value with db');
 set(x1,'Rotation',30);   
 set(x2,'Rotation',-30);  
 
-str=sprintf('Plot slot %d Freqency spectrum',slot_num);
+str=sprintf('Ant%d Plot slot %d Freqency spectrum',ant_num,slot_num);
 figure('NumberTitle', 'on', 'Name', str);
 subplot(3,5,15);
 plot(symbol_freq_abs,'.');
