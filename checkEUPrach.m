@@ -7,12 +7,16 @@ addpath('./RX_MATLAB');
 t=now;
 datestr(t,0)
 %% load EU input data
-load caps.mat
+%load caps.mat
 %load matlab1029.mat
 %load './cap_data/matlab4.mat'
 %load 'matlab1714.mat'
-load 'matlab1655.mat'
+%load 'matlab1655.mat'
+load 'matlab0907.mat'
 coeff = phase_coeff;
+
+view_freq=0;
+view_caps=0;
 %%
 % figure;
 % plot(20*log10(abs(fd_35)),'.');
@@ -21,9 +25,27 @@ coeff = phase_coeff;
 %% seperate AntData
 ant0=t1AntData(:,1);
 ant1=t1AntData(:,3);
-str=sprintf('Plot Ant0 full view');
+SymbNum=floor(length(ant0)/(4096+288));
+str=sprintf('Plot Ant0/1 full view');
 figure('NumberTitle', 'on', 'Name', str);grid on;
-plot(abs(ant0));title("Timing Pan View of Ant data");grid on; 
+titlestr=sprintf("Timing Pan View of Ant data with %d symol",SymbNum);
+ant_abs=[abs(ant0),abs(ant1)];
+plot(ant_abs,'.');title(titlestr);grid on;
+dim1=[0.85 0.85 0.90 0.90];%rectangle or ellipse(x,y)
+P1=[0.7 0.45]; % 建立从(x(1), y(1))到(x(2), y(2))的线注释对象
+P2=[0.7 0.45];
+annotation('arrow',P2,P1);
+text(61440*9,max(abs(ant0)+1),'\fontsize{15}slot9');
+str=sprintf('Plot Power Ant0/1 full view');
+figure('NumberTitle', 'on', 'Name', str);grid on;
+titlestr=sprintf("Timing Pan View of Ant data Power with %d symol",SymbNum);
+ant_abs_log=[20*log10(abs(ant0)),20*log10(abs(ant1))];
+plot(ant_abs_log,'.');title(titlestr);grid on;
+dim1=[0.85 0.85 0.90 0.90];%rectangle or ellipse(x,y)
+P2=[0.7 0.45];
+P1=[0.7 0.45];
+annotation('arrow',P2,P1);
+text(61440*9,max(ant_abs_log(:,1))+1,'\fontsize{15}slot9');
 Ant_view=ant0;
 %% split to symbol
 % symAll=splitSlot2Symbol(Ant_view);
@@ -31,7 +53,7 @@ slotTsLen=61440;
 %% view all slot
 totalSlotNum=ceil(length(ant0)/slotTsLen);
 
-for i=21:totalSlotNum
+for i=20:totalSlotNum
     %freq=plot1msBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
     tRange=(i-1)*slotTsLen+1:i*slotTsLen;
     plot1SlotBasebandConstellation(ant0(tRange),i-1,0);
@@ -43,17 +65,19 @@ end
 % freqN=plot1SlotBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
 
 %% view EU frequecy domain result
-fant0=f1AntData(:,1);
-fant1=f1AntData(:,3);
-
-slotFsLen=3276*14;
-for i=20:totalSlotNum
-    fRange=(i-1)*slotFsLen+1:i*slotFsLen;
-    Ant_view0=fant0(fRange);
-    Ant_view1=fant1(fRange);
+if view_freq
+    fant0=f1AntData(:,1);
+    fant1=f1AntData(:,3);
     
-    [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation(Ant_view0,i-1,0);
-    [symbol1,symbol_abs1]=plot1SlotFreqencySignalConstellation(Ant_view1,i-1,1);
+    slotFsLen=3276*14;
+    for i=20:totalSlotNum
+        fRange=(i-1)*slotFsLen+1:i*slotFsLen;
+        Ant_view0=fant0(fRange);
+        Ant_view1=fant1(fRange);
+        
+        [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation(Ant_view0,i-1,0);
+        [symbol1,symbol_abs1]=plot1SlotFreqencySignalConstellation(Ant_view1,i-1,1);
+    end
 end
 %% view last slot any symbol
 viewSymbNum=1;
@@ -76,19 +100,21 @@ symb_freqFPGA=fft(symbPC);
 symb_freqFPGA1=fftshift(symb_freqFPGA);
 plot1SymbolConstellation(symb_freqFPGA1,4096,'FPGA FFT');
 %% compare with FPGA result
-str=sprintf('Plot caps 35 Freqency spectrum');
-figure('NumberTitle', 'on', 'Name', str);
-plot(20*log10(abs(fd_35)),'.');
-grid on;
-title('FPGA 35 freqency log Data,6-agc does not work');
-
-str=sprintf('Plot caps 64 Freqency spectrum');
-figure('NumberTitle', 'on', 'Name', str);
-plot(20*log10(abs(fd_64)),'.');
-hold on;
-plot(20*log10(abs(symb_freqFPGA1))+96,'.r');
-grid on;
-title('FPGA 64 & FFT Bit ACC freqency log Data,6-agc does not work');
+if view_caps
+    str=sprintf('Plot caps 35 Freqency spectrum');
+    figure('NumberTitle', 'on', 'Name', str);
+    plot(20*log10(abs(fd_35)),'.');
+    grid on;
+    title('FPGA 35 freqency log Data,6-agc does not work');
+    
+    str=sprintf('Plot caps 64 Freqency spectrum');
+    figure('NumberTitle', 'on', 'Name', str);
+    plot(20*log10(abs(fd_64)),'.');
+    hold on;
+    plot(20*log10(abs(symb_freqFPGA1))+96,'.r');
+    grid on;
+    title('FPGA 64 & FFT Bit ACC freqency log Data,6-agc does not work');
+end
 %% get PRACH data
 slotN=19;
 i=slotN+1;
