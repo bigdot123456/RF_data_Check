@@ -153,7 +153,10 @@ grid on;
 for i=1:slotSymbNum
     subplot(3,5,i);
     plot(symbol_freq_abs(:,i));
-    str=sprintf('slot:%d symbol:%d',slot_num,i-1);
+    symbol_freq_max=max(symbol_freq_abs(:,i));
+    symbol_ave=mean(symbol_abs(:,i));
+    str=sprintf('slot:%d symbol:%d,max:%d,ave:%d db\t',slot_num,i-1,ceil(symbol_freq_max),ceil(symbol_ave));
+    fprintf(str);
     title(str);
     %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
     grid on;
