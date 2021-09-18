@@ -9,6 +9,7 @@ end
 %% start figure
 str=sprintf('Plot slot %d Constellation with %d point',v_slot,len);
 figure('NumberTitle', 'on', 'Name', str);
+Scale=max(abs(Ant_freq(:)));
 for i=1:14
     subplot(5,4,i);
     hold on;
@@ -22,6 +23,7 @@ for i=1:14
     plot(Id(1:len),Qd(1:len),'.');
     str=sprintf('symbol:%d len:%d',i,len);
     title(str);
+    axis([-Scale,Scale,-Scale,Scale]);
     %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
     grid on;
     if i==3
@@ -34,6 +36,7 @@ for i=1:14
         str=sprintf('symbol:%d,dmrs 1',i);
         
         title(str);
+        axis([-Scale,Scale,-Scale,Scale]);
         %phase=derotate(cpx);display(phase);
         %
     end
@@ -45,7 +48,8 @@ for i=1:14
         subplot(5,4,18);
         plot(Id(2:2:len),Qd(2:2:len),'.');
         str=sprintf('symbol:%d,dmrs 1',i);
-       title(str);
+        title(str);
+        axis([-Scale,Scale,-Scale,Scale]);
        %phase=derotate(cpx);
        %display(phase);
     end

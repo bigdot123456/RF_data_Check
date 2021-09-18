@@ -31,10 +31,12 @@ grid on;
 %% constellation
 Id=real(Ant_view);
 Qd=imag(Ant_view);
+Scale=max(abs(Ant_view(:)));
 
 %scatter(Id,Qd);
 plot(Id(1:len),Qd(1:len),'.');
-str=sprintf('%s:OFDM symbol constellation',fig_str);
+str=sprintf('%s:OFDM symbol constellation, max:%d',fig_str,ceil(Scale));
 title(str);
 grid on;
+axis([-Scale,Scale,-Scale,Scale]);
 

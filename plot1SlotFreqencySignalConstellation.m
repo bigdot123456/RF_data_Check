@@ -5,6 +5,8 @@ if nargin==1
 elseif nargin==2
     ant_num=0;
 end
+MIN=30;
+format short;
 %% plot slot frequency & constellation result
 symbol=reshape(Ant_view,[],14);
 slotSymbNum=14;
@@ -20,7 +22,6 @@ if(slot_num==19)
    end
 end
 %% start compare frequency domain analsys
-MIN=-120;
 symbol_abs=20*log10(abs(symbol));
 symbol_abs(symbol_abs==-inf)=MIN;
 
@@ -77,10 +78,17 @@ grid on;
 
 for i=1:slotSymbNum
     subplot(3,5,i);
-    plot(symbol_abs(:,i));
+    plot(symbol_abs(:,i),'.');
     symbol_max=max(symbol_abs(:,i));
     symbol_ave=mean(symbol_abs(:,i));
-    str=sprintf('slot:%d symbol:%d,max:%d,ave:%d db\t',slot_num,i-1,ceil(symbol_max),ceil(symbol_ave));
+    
+    symbol_fmax=max(abs(symbol(:,i)));
+    symbol_fave=mean(abs(symbol(:,i)));
+    para=20*log(symbol_fmax/symbol_fave);
+    
+    tstr=sprintf('slot:%d.%d,fmax:%d,fave:%d,par:%2.2f\t',slot_num,i-1,ceil(symbol_fmax),ceil(symbol_fave),para);
+    fprintf(tstr);
+    str=sprintf('slot:%d.%d,max:%2.2f,ave:%d,par:%2.2fdb\n',slot_num,i-1,symbol_max,ceil(symbol_ave),para);
     fprintf(str);
     title(str);
     %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆

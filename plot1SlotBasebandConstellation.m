@@ -16,6 +16,8 @@ elseif nargin==3
     en_phase_comp = 1;
     fprintf("Open phase compensation!\n");
 end
+MIN=30;
+format short;
 %% get phase compensation coeffcient
 % centralFreqHz = 3500000000;%中心频点，单位Hz
 % centralFreqHz = 2496000000;%%%ARFCN  499200
@@ -55,7 +57,6 @@ for i=1:slotSymbNum
    symbol_freq(:,i)=fftshift(symbol_freq_org(:,i));
 end
 %% start compare time domain & frequency domain analsys
-MIN=-120;
 symbol_abs=20*log10(abs(symbolPC));
 symbol_abs(symbol_abs==-inf)=MIN;
 symbol_freq_abs=20*log10(abs(symbol_freq));
@@ -152,10 +153,15 @@ grid on;
 
 for i=1:slotSymbNum
     subplot(3,5,i);
-    plot(symbol_freq_abs(:,i));
-    symbol_freq_max=max(symbol_freq_abs(:,i));
+    plot(symbol_freq_abs(:,i),'.' );
+    symbol_fmax=max(symbol_freq_abs(:,i));
     symbol_ave=mean(symbol_abs(:,i));
-    str=sprintf('slot:%d symbol:%d,max:%d,ave:%d db\t',slot_num,i-1,ceil(symbol_freq_max),ceil(symbol_ave));
+    symbol_tmax=max(abs(symbolPC(:,i)));
+    symbol_tave=mean(abs(symbolPC(:,i)));
+    para=20*log(symbol_tmax/symbol_tave);
+    tstr=sprintf('slot:%d.%d,tmax:%d,tave:%d,para:%2.2f\t',slot_num,i-1,ceil(symbol_tmax),ceil(symbol_tave),para);
+    fprintf(tstr);
+    str=sprintf('slot:%d.%d,max:%2.2f,ave:%d,par:%2.2f\n',slot_num,i-1,symbol_fmax,ceil(symbol_ave),para);
     fprintf(str);
     title(str);
     %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
