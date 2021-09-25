@@ -21,13 +21,15 @@ datestr(t,0)
 %load 'matlab1802.mat'
 %load 'matlab1629.mat'
 %load 'matlab1726.mat'
+%oad 'matlab1709.mat'
 view_freq=0;
 view_time=1;
 view_caps=0;
 view_last=0;
 
-fF='iladata.txt';
-tF='tladata.txt';
+% tAntData=t1AntData;
+% tF='tladata.txt';
+tF='/Volumes/ORAN/L1/chendalong/cap_1627/t0_ddr_data.txt';
 if view_freq==1
     fAntData=readDDRData(fF,0);
 end
@@ -79,11 +81,11 @@ if view_time
     sym0=zeros(4096,totalSlotNum*14);
     sym1=zeros(4096,totalSlotNum*14);
     view=0;
-    for i=8:9
+    for i=9:10
         %freq=plot1msBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
         tRange=(i-1)*slotTsLen+1:i*slotTsLen;
         [~,~,~,sym0(:,view*14+(1:14))]=plot1SlotBasebandConstellation(tant0(tRange),i-1,0);
-        %[~,~,~,sym1(:,view*14+(1:14))]=plot1SlotBasebandConstellation(ant1(tRange),i-1,1);
+        [~,~,~,sym1(:,view*14+(1:14))]=plot1SlotBasebandConstellation(tant1(tRange),i-1,1);
         view=view+1;
     end
     for i=219:totalSlotNum

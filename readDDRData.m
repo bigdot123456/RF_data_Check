@@ -2,12 +2,12 @@
 function AntData=readDDRData(filename,tFlag)
 %% read data from csv files
 if nargin==0
-    filename = 'iladata.txt';
+    filename = '~/Downloads/t0_ddr_data.txt';
     tFlag=0;
 elseif nargin==1
     tFlag=1;
 end
-
+bitWidth=16;
 %% set parameter
 if tFlag==1
     catch_symb_num=280;
@@ -28,19 +28,20 @@ SLOT_NUM = catch_symb_num/SLOT_SYMB_NUM;
 SlotSymNum = (SYMB0_LEN+SYMBX_LEN*13);
 
 %% read file
+% a=readtable(filename,'Delimiter',' ','ReadVariableNames',false);
+%conver 32bit data to IQ data
+fID = fopen(filename,'r');
+IQ=fscanf(fID,'%4x%4x');
+I0=IQ(1:2:end);
+Q0=IQ(2:2:end);
 
-a=textscan(filename,'%s');
-b = char([]);
+% c(find(c>= 2^15)) = c(find(c>= 2^15)) -2^16;%(把15,16替换成你想要的位数就可以了)
+pos=I0>=2^(bitWidth-1);
+I0(pos)=I0(pos)-2^(bitWidth);
+pos=Q0>=2^(bitWidth-1);
+Q0(pos)=Q0(pos)-2^(bitWidth);
 
-for i=1:length(a)
-    b(i,:)=a{i};
-end
-%  b1=reshape(b,4,[]).';
-
-u16_b = hex2dec(reshape(b,4,[]).');
-s16_b = (u16_b >=32768 ).*(u16_b-2^16)+(u16_b < 32768 ).*(u16_b);
-
-c_b = s16_b(2:2:end) + s16_b(1:2:end)*sqrt(-1);
+IQ = I0 + 1i*Q0;
 %% reshape data
 AntData = zeros(SlotSymNum*SLOT_NUM,ANT_NUM);
 for i=1:SLOT_NUM
@@ -52,7 +53,7 @@ for i=1:SLOT_NUM
             else
                 len = SYMBX_LEN;
             end
-            AntData(start_pos+(1:len),k) = c_b((i-1)*ANT_NUM*SYMBDDR_LEN*SLOT_SYMB_NUM + (j-1)*ANT_NUM*SYMBDDR_LEN + (k-1)*SYMBDDR_LEN + (1:len));
+            AntData(start_pos+(1:len),k) = IQ((i-1)*ANT_NUM*SYMBDDR_LEN*SLOT_SYMB_NUM + (j-1)*ANT_NUM*SYMBDDR_LEN + (k-1)*SYMBDDR_LEN + (1:len));
         end
     end
 end
