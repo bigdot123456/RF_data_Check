@@ -151,8 +151,11 @@ str=sprintf('slot:%d all symbol',slot_num);
 title(str);
 grid on;
 
+Scale=max(max(symbol_freq_abs));
+
 for i=1:slotSymbNum
     subplot(3,5,i);
+    axis([0,4096,0,Scale]);
     plot(symbol_freq_abs(:,i),'.' );
     symbol_fmax=max(symbol_freq_abs(:,i));
     symbol_ave=mean(symbol_abs(:,i));

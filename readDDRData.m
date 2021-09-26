@@ -3,29 +3,27 @@ function AntData=readDDRData(filename,tFlag)
 %% read data from csv files
 if nargin==0
     filename = '~/Downloads/t0_ddr_data.txt';
-    tFlag=0;
+    tFlag=1;
 elseif nargin==1
     tFlag=1;
 end
 bitWidth=16;
 %% set parameter
 if tFlag==1
-    catch_symb_num=280;
     SYMB0_LEN=4448;
     SYMBX_LEN=4384;
     SYMBDDR_LEN =4464;
-    % SLOT_LEN =61440*4;
+    SLOT_LEN =61440;
+    
 else
-    catch_symb_num=280;
     SYMB0_LEN=3276;
     SYMBX_LEN=3276;
     SYMBDDR_LEN =4464;
-    % SLOT_LEN =61440*4;
+    SLOT_LEN =61440;
 end
 SLOT_SYMB_NUM=14;
 ANT_NUM =4;
-SLOT_NUM = catch_symb_num/SLOT_SYMB_NUM;
-SlotSymNum = (SYMB0_LEN+SYMBX_LEN*13);
+
 
 %% read file
 % a=readtable(filename,'Delimiter',' ','ReadVariableNames',false);
@@ -43,6 +41,11 @@ Q0(pos)=Q0(pos)-2^(bitWidth);
 
 IQ = I0 + 1i*Q0;
 %% reshape data
+SLOT_NUM0=floor(length(IQ)/(SLOT_LEN*ANT_NUM));
+SLOT_NUM=floor(SLOT_NUM0/20)*20;
+%SLOT_NUM = catch_symb_num/SLOT_SYMB_NUM;
+SlotSymNum = (SYMB0_LEN+SYMBX_LEN*13);
+
 AntData = zeros(SlotSymNum*SLOT_NUM,ANT_NUM);
 for i=1:SLOT_NUM
     for j=1:SLOT_SYMB_NUM

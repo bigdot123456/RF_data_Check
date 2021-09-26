@@ -1,5 +1,5 @@
 %% load data
-clear;
+%clear;
 clc;
 close all;
 
@@ -29,7 +29,8 @@ view_last=0;
 
 % tAntData=t1AntData;
 % tF='tladata.txt';
-tF='/Volumes/ORAN/L1/chendalong/cap_1627/t0_ddr_data.txt';
+%tF='/Volumes/ORAN/L1/chendalong/cap_1627/t0_ddr_data.txt';
+tF='t1_ddr_data.txt';
 if view_freq==1
     fAntData=readDDRData(fF,0);
 end
