@@ -53,6 +53,7 @@ set(x2,'Rotation',-30);
 %plot(abs(Ant_view));
 title(str);
 grid on;
+colorbar;
 
 str=sprintf('Ant%d slot %d symbol IQ abs log power frequency series with %d point',ant_num,slot_num,length(symbol_abs(:,1)));
 figure('NumberTitle', 'on', 'Name', str);
@@ -66,8 +67,13 @@ set(x1,'Rotation',30);
 set(x2,'Rotation',-30);  
 title(str);
 grid on;
-
+colorbar;
 %% plot every symbol spectrum
+Scale=max(max(symbol_abs));
+if Scale==0
+    Scale=1
+end
+
 str=sprintf('Ant%d Plot slot %d Freqency spectrum',ant_num,slot_num);
 figure('NumberTitle', 'on', 'Name', str);
 subplot(3,5,15);
@@ -75,10 +81,20 @@ plot(symbol_abs,'.');
 str=sprintf('slot:%d all symbol',slot_num);
 title(str);
 grid on;
+axis([0,3276,0,Scale]);
 
 for i=1:slotSymbNum
     subplot(3,5,i);
-    plot(symbol_abs(:,i),'.');
+    
+    xy=symbol_abs(:,i);
+    len=length(xy);
+    inx1=1:2:len;
+    inx2=2:2:len;
+    plot(inx1,xy(inx1),'.');
+    hold;
+    plot(inx2,xy(inx2),'r.');
+    
+    
     symbol_max=max(symbol_abs(:,i));
     symbol_ave=mean(symbol_abs(:,i));
     
@@ -93,6 +109,7 @@ for i=1:slotSymbNum
     title(str);
     %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
     grid on;
+    axis([0,3276,0,Scale]);
 end
 
 %% set basic data

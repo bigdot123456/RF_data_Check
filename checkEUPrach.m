@@ -1,5 +1,5 @@
 %% load data
-%clear;
+clear;
 clc;
 close all;
 
@@ -22,15 +22,20 @@ datestr(t,0)
 %load 'matlab1629.mat'
 %load 'matlab1726.mat'
 %oad 'matlab1709.mat'
-view_freq=0;
-view_time=1;
+view_freq=1;
+view_time=0;
 view_caps=0;
 view_last=0;
 
 % tAntData=t1AntData;
 % tF='tladata.txt';
 %tF='/Volumes/ORAN/L1/chendalong/cap_1627/t0_ddr_data.txt';
-tF='t1_ddr_data.txt';
+%tF='t1_ddr_data.txt';
+%tF='./0926_1022/t1_ddr_data.txt';
+%fF='./0926_1022/f3_ddr_data.txt';
+tF='./1136/t0_ddr_data.txt';
+%fF='./1136/f1_ddr_data.txt';
+fF='./0926_1022/f3_ddr_data.txt';
 if view_freq==1
     fAntData=readDDRData(fF,0);
 end
@@ -102,7 +107,7 @@ if view_time
     if UpNum>0
         str=sprintf('Ant0 total %d slot IQ abs log power freq series with %d point',UpNum,4096);
         figure('NumberTitle', 'on', 'Name', str);
-        % plot(t0,'.r');hold on;
+        % plot(t0,'.r');hold; on;
         % plot(t1,'b');
         mesh(sym0(:,1:UpNum*14),'FaceAlpha','0.5');
         x1=xlabel('Symbol Direction: 1 -> 14');
@@ -112,10 +117,11 @@ if view_time
         set(x2,'Rotation',-30);
         title(str);
         grid on;
+        colorbar;
         
         str=sprintf('Ant1 total %d slot IQ abs log power freq series with %d point',UpNum,4096);
         figure('NumberTitle', 'on', 'Name', str);
-        % plot(t0,'.r');hold on;
+        % plot(t0,'.r');hold; on;
         % plot(t1,'b');
         mesh(sym1(:,1:UpNum*14),'FaceAlpha','0.5');
         x1=xlabel('Symbol Direction: 1 -> 14');
@@ -125,6 +131,7 @@ if view_time
         set(x2,'Rotation',-30);
         title(str);
         grid on;
+        colorbar;
     end
     %% view last slot any symbol
     if view_last>0
@@ -198,7 +205,7 @@ if view_freq
         [symbol1,symbol_abs1]=plot1SlotFreqencySignalConstellation(Ant_view1,i-1,1);
         
     end
-    for i=21:totalSlotNum
+    for i=219:totalSlotNum
         fRange=(i-1)*slotFsLen+1:i*slotFsLen;
         Ant_view0=fant0(fRange);
         Ant_view1=fant1(fRange);
@@ -220,7 +227,7 @@ if view_caps
     str=sprintf('Plot caps 64 Freqency spectrum');
     figure('NumberTitle', 'on', 'Name', str);
     plot(20*log10(abs(fd_64)),'.');
-    hold on;
+    hold; on;
     plot(20*log10(abs(symb_freqFPGA1))+96,'.r');
     grid on;
     title('FPGA 64 & FFT Bit ACC freqency log Data,6-agc does not work');

@@ -76,23 +76,43 @@ grid on;
 %% plot every symbol spectrum
 str=sprintf('Plot slot %d Freqency spectrum',2*slot_num);
 figure('NumberTitle', 'on', 'Name', str);
+Scale=max(max(symbol28_freq_abs));
+if Scale==0
+    Scale=1
+end
 for i=1:14
     subplot(3,5,i);
-    plot(symbol28_freq_abs(:,i));
+    xy=symbol28_freq_abs(:,i);
+    len=length(xy);
+    inx1=1:2:len;
+    inx2=2:2:len;
+    plot(inx1,xy(inx1),'.');
+    hold;
+    plot(inx2,xy(inx2),'r.');
+    
     str=sprintf('slot:%d symbol:%d',2*slot_num,i);
     title(str);
     %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
     grid on;
+    axis([0,4096,0,Scale]);
 end
 str=sprintf('Plot slot %d Freqency spectrum',2*slot_num+1);
 figure('NumberTitle', 'on', 'Name', str);
 for i=1:14
     subplot(3,5,i);
-    plot(symbol28_freq_abs(:,i+14));
+    xy=symbol28_freq_abs(:,i+14);
+    len=length(xy);
+    inx1=1:2:len;
+    inx2=2:2:len;
+    plot(inx1,xy(inx1),'.');
+    hold;
+    plot(inx2,xy(inx2),'r.');
+    
     str=sprintf('slot:%d symbol:%d',2*slot_num+1,i);
     title(str);
     %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
     grid on;
+    axis([0,4096,0,Scale]);
 end
 %% set basic data
 f_use=3276;
@@ -109,7 +129,7 @@ plot1SlotConstellation_Inner(Ant_freq(:,15:28),2*slot_num+1,512);
 % figure('NumberTitle', 'on', 'Name', str);
 % for i=1:14
 %     subplot(5,4,i);
-%     hold on;
+%     hold; on;
 %     %scatterplot(Ant_freq(:,i+v_slot*14));
 %     %scatterplot(Ant0_IQ(:,13)); % 选定第13个符号
 %     cpx=Ant_freq(:,i);

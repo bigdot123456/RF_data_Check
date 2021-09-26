@@ -30,8 +30,9 @@ ANT_NUM =4;
 %conver 32bit data to IQ data
 fID = fopen(filename,'r');
 IQ=fscanf(fID,'%4x%4x');
-I0=IQ(1:2:end);
-Q0=IQ(2:2:end);
+len=floor(length(IQ)/2);
+I0=IQ(1:2:len*2);
+Q0=IQ(2:2:len*2);
 
 % c(find(c>= 2^15)) = c(find(c>= 2^15)) -2^16;%(把15,16替换成你想要的位数就可以了)
 pos=I0>=2^(bitWidth-1);
