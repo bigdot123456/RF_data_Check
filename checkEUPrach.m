@@ -81,30 +81,30 @@ if view_time
     totalSlotNum=ceil(length(tant0)/slotTsLen);
     sym0=zeros(4096,totalSlotNum*14);
     sym1=zeros(4096,totalSlotNum*14);
-    view=0;
+    UpNum=0;
     for i=9:10
         %freq=plot1msBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
         tRange=(i-1)*slotTsLen+1:i*slotTsLen;
-        [~,~,~,sym0(:,view*14+(1:14))]=plot1SlotBasebandConstellation(tant0(tRange),i-1,0);
-        [~,~,~,sym1(:,view*14+(1:14))]=plot1SlotBasebandConstellation(tant1(tRange),i-1,1);
-        view=view+1;
+        [~,~,~,sym0(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant0(tRange),i-1,0);
+        [~,~,~,sym1(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant1(tRange),i-1,1);
+        UpNum=UpNum+1;
     end
     for i=219:totalSlotNum
         %freq=plot1msBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
         tRange=(i-1)*slotTsLen+1:i*slotTsLen;
         %[symbolPC,symbol_abs,symbol_freq,symbol_freq_abs]
-        [~,~,~,sym0(:,view*14+(1:14))]=plot1SlotBasebandConstellation(tant0(tRange),i-1,0);
-        [~,~,~,sym1(:,view*14+(1:14))]=plot1SlotBasebandConstellation(tant1(tRange),i-1,1);
-        view=view+1;
+        [~,~,~,sym0(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant0(tRange),i-1,0);
+        [~,~,~,sym1(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant1(tRange),i-1,1);
+        UpNum=UpNum+1;
     end
     
     %% view continue slot
-    if view>0
-        str=sprintf('Ant0 total %d slot IQ abs log power freq series with %d point',view,4096);
+    if UpNum>0
+        str=sprintf('Ant0 total %d slot IQ abs log power freq series with %d point',UpNum,4096);
         figure('NumberTitle', 'on', 'Name', str);
         % plot(t0,'.r');hold on;
         % plot(t1,'b');
-        mesh(sym0(:,1:view*14),'FaceAlpha','0.5');
+        mesh(sym0(:,1:UpNum*14),'FaceAlpha','0.5');
         x1=xlabel('Symbol Direction: 1 -> 14');
         x2=ylabel('Sample sc Direction: 1 -> 4096');
         x3=zlabel('Sample value scale in db scale');
@@ -113,11 +113,11 @@ if view_time
         title(str);
         grid on;
         
-        str=sprintf('Ant1 total %d slot IQ abs log power freq series with %d point',view,4096);
+        str=sprintf('Ant1 total %d slot IQ abs log power freq series with %d point',UpNum,4096);
         figure('NumberTitle', 'on', 'Name', str);
         % plot(t0,'.r');hold on;
         % plot(t1,'b');
-        mesh(sym1(:,1:view*14),'FaceAlpha','0.5');
+        mesh(sym1(:,1:UpNum*14),'FaceAlpha','0.5');
         x1=xlabel('Symbol Direction: 1 -> 14');
         x2=ylabel('Sample sc Direction: 1 -> 4096');
         x3=zlabel('Sample value scale in db scale');
@@ -235,3 +235,6 @@ i=slotN+1;
 t=now;
 datestr(t,0)
 
+% view([45 25]) %将方位角设置为 45 度，将仰角设置为 25 度。
+
+% view([20 25 5]) %将视线设置为指向与向量 [20 25 5] 相同方向的向量。
