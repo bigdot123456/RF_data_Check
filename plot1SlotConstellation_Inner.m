@@ -35,13 +35,13 @@ for i=1:14
         plot(Id(1:2:len),Qd(1:2:len),'.');
         str=sprintf('symbol:%d,dmrs 0',i);
         title(str);
-        axis([-Scale,Scale,-Scale,Scale]);
+        %axis([-Scale,Scale,-Scale,Scale]);
         
         subplot(5,4,16);
-        plot(Id(1:2:len),Qd(1:2:len),'.r');
+        plot(Id(2:2:len),Qd(2:2:len),'.r');
         str=sprintf('symbol:%d,dmrs 1',i);
         title(str);
-        axis([-Scale,Scale,-Scale,Scale]);
+        %axis([-Scale,Scale,-Scale,Scale]);
         %phase=derotate(cpx);display(phase);
         %
     end
@@ -50,13 +50,13 @@ for i=1:14
         plot(Id(1:2:len),Qd(1:2:len),'.');
         str=sprintf('symbol:%d,dmrs 0',i);
         title(str);
-        axis([-Scale,Scale,-Scale,Scale]);
+        %axis([-Scale,Scale,-Scale,Scale]);
         
         subplot(5,4,18);
-        plot(Id(1:2:len),Qd(1:2:len),'.');
+        plot(Id(2:2:len),Qd(2:2:len),'.r');
         str=sprintf('symbol:%d,dmrs 1',i);
         title(str);
-        axis([-Scale,Scale,-Scale,Scale]);
+        %axis([-Scale,Scale,-Scale,Scale]);
        %phase=derotate(cpx);
        %display(phase);
     end
