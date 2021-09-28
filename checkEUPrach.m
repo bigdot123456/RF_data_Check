@@ -37,9 +37,10 @@ tF='./1136/t0_ddr_data.txt';
 %fF='./1136/f1_ddr_data.txt';
 %fF='./0926_1022/f3_ddr_data.txt';
 %fF='/mnt/oran/L1/chendalong/0926_1826/f1_ddr_data.txt';
-%fF='/mnt/oran/L1/chendalong/0927_1114/f3_ddr_data.txt'; % in shelf box
+fF='/mnt/oran/L1/chendalong/0927_1114/f3_ddr_data.txt'; % in shelf box
 %fF='/mnt/oran/L1/chendalong/0927_1142/f3_ddr_data.txt'; % in near point
-fF='/mnt/oran/L1/chendalong/0927_1154/f1_ddr_data.txt'; % in near point
+%fF='/mnt/oran/L1/chendalong/0927_1154/f1_ddr_data.txt'; % in near point，5m
+fF='/mnt/oran/L1/chendalong/0928_0959/f0_ddr_data.txt'; % in shelf box,5m
 
 if view_freq==1
     fAntData=readDDRData(fF,0);

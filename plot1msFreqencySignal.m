@@ -5,7 +5,7 @@ end
 MIN=30;
 
 SymbSCNum=3276;
-symbol=reshape(Ant_view,[],SymbSCNum);
+symbol=reshape(Ant_view,SymbSCNum,[]);
 %% start compare frequency domain analsys
 symbol_abs=20*log10(abs(symbol));
 symbol_abs(symbol_abs==-inf)=MIN;
