@@ -17,7 +17,11 @@ log_freq=20*log10(abs(Ant_view));
 
 str=sprintf('%s:1 symbol frequency spectrum DB scaled with %d point',fig_str,len);
 figure('NumberTitle', 'on', 'Name', str);
-plot(log_freq,'.');
+pos1=1:2:len;
+pos2=2:2:len;
+plot(pos1,log_freq(pos1),'.');
+hold;
+plot(pos2,log_freq(pos2),'.m');
 title(str);
 grid on;
 
@@ -34,7 +38,10 @@ Qd=imag(Ant_view);
 Scale=max(abs(Ant_view(:)));
 
 %scatter(Id,Qd);
-plot(Id(1:len),Qd(1:len),'.');
+plot(Id(1:2:len),Qd(1:2:len),'.');
+hold;
+plot(Id(2:2:len),Qd(2:2:len),'.m');
+
 str=sprintf('%s:OFDM symbol constellation, max:%d',fig_str,ceil(Scale));
 title(str);
 grid on;

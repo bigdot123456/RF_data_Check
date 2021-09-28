@@ -1,4 +1,4 @@
-function plot1msSignal(Ant_view,ant_num)
+function slotCollectFreq=plot1msSignal(Ant_view,ant_num)
 if nargin==1
     ant_num=0;
 end
@@ -7,8 +7,8 @@ MIN=+30;
 ms_5TsNum=61440;
 len_fft=4096;
 symNum=14;
-slotNum=length(Ant_view)/ms_5TsNum;
-slotCollect=reshape(Ant_view,ms_5TsNum,[]);
+slotNum=floor(length(Ant_view)/ms_5TsNum);
+slotCollect=reshape(Ant_view(1:slotNum*ms_5TsNum),[],ms_5TsNum);
 slotCollectFreq=zeros(len_fft,slotNum*symNum);
 slotCollectTime=zeros(len_fft,slotNum*symNum);
 

@@ -1,8 +1,37 @@
-function [che,cpx_che,cpx_pc]=CHEDMRS(cpx0,cpx1)
+function [che,cpx_che,cpx_pc]=CHEDMRS(cpx0,cpx1,DMRSParam)
 %% this function is decode dmrs
+if nargin==0
+    fprintf("error with no parameter in");
+    fprintf("parameter is:CHEDMRS(cpx0,cpx1,DMRSParam)");
+    return 
+elseif nargin==1
+    cpx1=cpx0;
+    indexSlotInFrame=9;
+    DMRSSymbolPos=3;
+    nSCID=0;
+    N_nSCID_ID=1;
+    RBMax=273;
+elseif nargin==2
+    indexSlotInFrame=9;
+    DMRSSymbolPos=3;
+    nSCID=0;
+    N_nSCID_ID=1;
+    RBMax=273;
+else
+    indexSlotInFrame=DMRSParam.indexSlotInFrame;
+    DMRSSymbolPos=DMRSParam.DMRSSymbolPos;
+    nSCID=DMRSParam.nSCID;
+    N_nSCID_ID=DMRSParam.N_nSCID_ID;
+    RBMax=DMRSParam.RBMax;
+end
+
 global debug_che;
 len=length(cpx0)/2;
 cpx_pc=zeros(len,4);
+%% generate std RS signal
+DMRSsignal = DMRS_base_seq_generation(indexSlotInFrame,DMRSSymbolPos, nSCID, N_nSCID_ID, RBMax);
+
+%% decode DMRS
 [cpx_pc(:,1:2),ant0_fc]=DecodeDMRS(cpx0);
 [cpx_pc(:,3:4),ant1_fc]=DecodeDMRS(cpx1);
 %% channel estimation method

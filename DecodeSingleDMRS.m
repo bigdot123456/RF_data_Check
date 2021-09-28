@@ -45,7 +45,4 @@ if debug_SingleDMRS
     
     figure;plot(d_ang_min_norm,'.');
     title("normal diff angle plot");grid on;
-    
-    figure;plot(d_ang_min_norm,'.');
-    title("normal diff angle plot");grid on;
 end
