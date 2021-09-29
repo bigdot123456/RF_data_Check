@@ -156,11 +156,20 @@ Scale=max(max(symbol_freq_abs));
 for i=1:slotSymbNum
     subplot(3,5,i);
     axis([0,4096,0,Scale]);
-    plot(symbol_freq_abs(:,i),'.' );
+
+    xy=symbol_freq_abs(:,i);
+    len=length(xy);
+    inx1=1:2:len;
+    inx2=2:2:len;
+    plot(inx1,xy(inx1),'.');
+    hold;
+    plot(inx2,xy(inx2),'r.');
+    
     symbol_fmax=max(symbol_freq_abs(:,i));
     symbol_ave=mean(symbol_abs(:,i));
     symbol_tmax=max(abs(symbolPC(:,i)));
     symbol_tave=mean(abs(symbolPC(:,i)));
+    
     para=20*log(symbol_tmax/symbol_tave);
     tstr=sprintf('slot:%d.%d,tmax:%d,tave:%d,para:%2.2f\t',slot_num,i-1,ceil(symbol_tmax),ceil(symbol_tave),para);
     fprintf(tstr);

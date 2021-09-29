@@ -8,7 +8,7 @@ ms_5TsNum=61440;
 len_fft=4096;
 symNum=14;
 slotNum=floor(length(Ant_view)/ms_5TsNum);
-slotCollect=reshape(Ant_view(1:slotNum*ms_5TsNum),[],ms_5TsNum);
+slotCollect=reshape(Ant_view(1:slotNum*ms_5TsNum),ms_5TsNum,[]);
 slotCollectFreq=zeros(len_fft,slotNum*symNum);
 slotCollectTime=zeros(len_fft,slotNum*symNum);
 

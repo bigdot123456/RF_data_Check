@@ -22,8 +22,8 @@ datestr(t,0)
 %load 'matlab1629.mat'
 %load 'matlab1726.mat'
 %oad 'matlab1709.mat'
-view_freq=1;
-view_time=0;
+view_freq=0;
+view_time=1;
 view_caps=0;
 view_last=0;
 
@@ -37,10 +37,11 @@ tF='./1136/t0_ddr_data.txt';
 %fF='./1136/f1_ddr_data.txt';
 %fF='./0926_1022/f3_ddr_data.txt';
 %fF='/mnt/oran/L1/chendalong/0926_1826/f1_ddr_data.txt';
-fF='/mnt/oran/L1/chendalong/0927_1114/f3_ddr_data.txt'; % in shelf box
+%fF='/mnt/oran/L1/chendalong/0927_1114/f3_ddr_data.txt'; % in shelf box
 %fF='/mnt/oran/L1/chendalong/0927_1142/f3_ddr_data.txt'; % in near point
-%fF='/mnt/oran/L1/chendalong/0927_1154/f1_ddr_data.txt'; % in near point，5m
-fF='/mnt/oran/L1/chendalong/0928_0959/f0_ddr_data.txt'; % in shelf box,5m
+fF='/mnt/oran/L1/chendalong/0927_1154/f1_ddr_data.txt'; % in near point，5m
+tF='/mnt/oran/L1/chendalong/0928_0959/t0_ddr_data.txt'; % in shelf box,5m
+%tF='/mnt/oran/L1/chendalong/0927_1114/t0_ddr_data.txt'; % in shelf box
 
 if view_freq==1
     fAntData=readDDRData(fF,0);
