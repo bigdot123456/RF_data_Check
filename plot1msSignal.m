@@ -14,12 +14,16 @@ slotCollectTime=zeros(len_fft,slotNum*symNum);
 
 for m=1:slotNum
     slotFFTIn=splitSlot2Symbol(slotCollect(:,m));
+    
     slotCollectTime(:,(m-1)*symNum+1:m*symNum)=slotFFTIn;
     for n=1:symNum
         slotFFTout=fft(slotFFTIn(:,n));
         slotFFTout1=fftshift(slotFFTout);
         slotCollectFreq(:,(m-1)*symNum+n)=slotFFTout1;
     end
+    
+    slotFCFFTIn=FC1Slot2Symbol(slotCollect(:,m));
+    
 end
 
 %% start Timing &Freqency domain analsys

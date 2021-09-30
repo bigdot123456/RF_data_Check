@@ -42,12 +42,15 @@ tF='./1136/t0_ddr_data.txt';
 fF='/mnt/oran/L1/chendalong/0927_1154/f1_ddr_data.txt'; % in near point，5m
 tF='/mnt/oran/L1/chendalong/0928_0959/t0_ddr_data.txt'; % in shelf box,5m
 %tF='/mnt/oran/L1/chendalong/0927_1114/t0_ddr_data.txt'; % in shelf box
+tF='~/Downloads/t1_ddr_data.txt'; % in shelf box,10m,bin format，2 stream
+%tF='~/Downloads/t5_ddr_data.txt'; % in shelf box,10m,bin format,1 stream
+fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
 
 if view_freq==1
-    fAntData=readDDRData(fF,0);
+    fAntData=readDDRBinData(fF,0);
 end
 if view_time==1
-    tAntData=readDDRData(tF,1);
+    tAntData=readDDRBinData(tF,1);
 end
 
 coeff = phase_coeff;
@@ -176,8 +179,8 @@ if view_freq
     fant0=fAntData(:,1);
     fant1=fAntData(:,3);
     
-    plot1msFreqencySignal(fant0,0)
-    plot1msFreqencySignal(fant1,1)
+    plot1msFreqencySignal(fant0,0);
+    plot1msFreqencySignal(fant1,1);
     %% view detail signal
     slotScLen=3276*14;
     totalSlotNum=ceil(length(fant0)/slotScLen);

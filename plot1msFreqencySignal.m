@@ -1,4 +1,4 @@
-function plot1msFreqencySignal(Ant_view,ant_num)
+function symbol=plot1msFreqencySignal(Ant_view,ant_num)
 if nargin==1
     ant_num=0;
 end
