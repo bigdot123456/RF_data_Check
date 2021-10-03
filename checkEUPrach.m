@@ -5,6 +5,7 @@ close all;
 
 %allFolds = genpath( pwd );
 addpath('./RX_MATLAB');
+addpath('./OFDM--STO-CFO');
 t=now;
 datestr(t,0)
 %% load EU input data
