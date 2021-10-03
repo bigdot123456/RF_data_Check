@@ -47,11 +47,20 @@ tF='/mnt/oran/L1/chendalong/0928_0959/t0_ddr_data.txt'; % in shelf box,5m
 %tF='~/Downloads/t5_ddr_data.txt'; % in shelf box,10m,bin format,1 stream
 fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
 
+Bin_or_TXT=0; % 1: binary,0:txt
 if view_freq==1
-    fAntData=readDDRBinData(fF,0);
+    if Bin_or_TXT==1
+        fAntData=readDDRBinData(fF,0);
+    else
+        fAntData=readDDRData(fF,0);
+    end
 end
 if view_time==1
-    tAntData=readDDRBinData(tF,1);
+    if Bin_or_TXT==1
+        tAntData=readDDRBinData(tF,1);
+    else
+        tAntData=readDDRData(tF,1);
+    end
 end
 
 coeff = phase_coeff;
@@ -64,9 +73,10 @@ coeff = phase_coeff;
 if view_time
     tant0=tAntData(:,1);
     tant1=tAntData(:,3);
-    plot1msSignal(tant0,0);
-    plot1msSignal(tant1,1);
-    
+    %plot1msSignal(tant0,0);
+    %plot1msSignal(tant1,1);
+    Process1msSignal(tant0,0);
+    Process1msSignal(tant1,1);
     %% detail signal analysis
     SymbNum=floor(length(tant0)/(4096+288));
     str=sprintf('Plot Ant0/1 full view');

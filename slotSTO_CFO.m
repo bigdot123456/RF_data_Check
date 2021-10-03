@@ -9,6 +9,14 @@ if nargin==1
     prb_len=3276;
     len_sym=len_scp+len_fft;
     len_shift_cp=len_lcp-len_scp;
+        
+    OFDMParam.len_IQ=len_IQ;
+    OFDMParam.len_slot=len_slot;
+    OFDMParam.len_scp=len_scp;
+    OFDMParam.len_lcp=len_lcp;
+    OFDMParam.len_fft=len_fft;
+    OFDMParam.prb_len=prb_len;
+
 elseif nargin==2
     len_IQ=OFDMParam.len_IQ;
     len_slot=OFDMParam.len_slot;
@@ -20,6 +28,7 @@ elseif nargin==2
     len_shift_cp=len_lcp-len_scp;
 end
 
+SearchLen=2*len_lcp;
 %% malloc memory
 sto_sn=zeros(1,len_slot);
 pos_sn=zeros(1,len_slot);

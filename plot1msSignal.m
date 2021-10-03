@@ -22,8 +22,6 @@ for m=1:slotNum
         slotCollectFreq(:,(m-1)*symNum+n)=slotFFTout1;
     end
     
-    slotFCFFTIn=FC1Slot2Symbol(slotCollect(:,m));
-    
 end
 
 %% start Timing &Freqency domain analsys

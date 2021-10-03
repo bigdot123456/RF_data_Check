@@ -1,6 +1,6 @@
-function [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,OFDMParam)
+function [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,SearchLen,OFDMParam)
 %% split 1Slot 2 28 Symbol,1228800
-if nargin<4
+if nargin<5
     len_IQ=1;
     len_slot=14;
     len_scp=288;
@@ -9,7 +9,14 @@ if nargin<4
     prb_len=3276;
     len_sym=len_scp+len_fft;
     len_shift_cp=len_lcp-len_scp;
-elseif nargin==4
+   
+    OFDMParam.len_IQ=len_IQ;
+    OFDMParam.len_slot=len_slot;
+    OFDMParam.len_scp=len_scp;
+    OFDMParam.len_lcp=len_lcp;
+    OFDMParam.len_fft=len_fft;
+    OFDMParam.prb_len=prb_len;
+elseif nargin==5
     len_IQ=OFDMParam.len_IQ;
     len_slot=OFDMParam.len_slot;
     len_scp=OFDMParam.len_scp;
@@ -20,7 +27,10 @@ elseif nargin==4
     len_shift_cp=len_lcp-len_scp;
 end
 
-SearchLen=2*lcp;
+if nargin<4
+    SearchLen=len_lcp;
+end
+
 if nargin==1
     lastSlotIn=zeros(1,SearchLen);
     nextSlotIn=zeros(1,SearchLen);
@@ -66,7 +76,10 @@ end
 % nn=0:length(y)-1; 
 % y_CFO = y.*exp(j*2*pi*CFO_FC*nn/Nfft);
 
- y=[lastSlotIn(end-SearchLen+1:end) SlotIn nextSlotIn(1:SearchLen)];
+% [a,b,c]%vertical concat
+% [a;b;c]% horizontal concat
+% a.' % a transpose not conjucte
+y=[lastSlotIn(end-SearchLen+1:end) ,SlotIn.',nextSlotIn(1:SearchLen)];
 
 [y_CFO,pos_sn,sto_sn,y_sto_FFTIn,y_CFO_FFTIn]=slotSTO_CFO(y,OFDMParam);
 % check it again after CFO, now again with sto

@@ -28,6 +28,7 @@ elseif nargin==4
     Nfft=4096;
 end
 
+global Debug_sto
 
 N_ofdm=Nfft+Ng;
 
@@ -45,19 +46,23 @@ if y_len<y_len_expect
 
 %Now start large range searching, from last symbol CP to this symbol CP
 minimum=10000;
-sto_diffsum=zeros(1,SearchLen);
+sto_diffsum=zeros(1,3*SearchLen);
 % now we should search total 2*Ng sample point
 %    temp = abs(y(com_delay + k  : com_delay + k + Ng-1)) - abs(y(com_delay+Nfft+k : com_delay + Ng-1 +Nfft+k));
-for k =1:SearchLen
+STO_est=[];
+for k =1:3*SearchLen
     pos1=StartPoint-1+(k:k+Ng-1);
     pos2=pos1+Nfft;
     temp = abs(y(pos1)) - abs(y(pos2));
     SquareSum=temp*temp';
     sto_diffsum(k) = SquareSum;
-    if sto_diffsum(k)<minimum
-        minimum =  sto_diffsum(k);
-        STO_est = k;
-    end
+end
+[sto_diff_mini,STO_est]=min(sto_diffsum);
+%% debug 
+if Debug_sto
+    figure;
+    plot(sto_diffsum,'.')
+    grid on;
 end
 pos0=StartPoint-1+(STO_est+Ng/2);
 posFFTIn=pos0+(1:Nfft)-1;
