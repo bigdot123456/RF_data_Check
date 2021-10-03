@@ -43,7 +43,7 @@ tF='./1136/t0_ddr_data.txt';
 fF='/mnt/oran/L1/chendalong/0927_1154/f1_ddr_data.txt'; % in near point，5m
 tF='/mnt/oran/L1/chendalong/0928_0959/t0_ddr_data.txt'; % in shelf box,5m
 %tF='/mnt/oran/L1/chendalong/0927_1114/t0_ddr_data.txt'; % in shelf box
-tF='~/Downloads/t1_ddr_data.txt'; % in shelf box,10m,bin format，2 stream
+%tF='~/Downloads/t1_ddr_data.txt'; % in shelf box,10m,bin format，2 stream
 %tF='~/Downloads/t5_ddr_data.txt'; % in shelf box,10m,bin format,1 stream
 fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
 
