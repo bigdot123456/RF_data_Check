@@ -37,7 +37,7 @@ OFDMParam.len_fft=len_fft;
 OFDMParam.prb_len=prb_len;
 OFDMParam.SearchLen=SearchLen;
 %% search lcp
-y=[Ant_view;Ant_view(len_fft,1);zeros(len_lcp,1)];
+y=[Ant_view;Ant_view(1:2*len_fft,1);zeros(len_lcp,1)];
 len=length(Ant_view);
 searchLen=len;
 
