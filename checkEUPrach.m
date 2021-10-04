@@ -10,6 +10,24 @@ t=now;
 datestr(t,0)
 
 global Debug_view Debug_slotSTO_CFO
+    len_IQ=1;
+    len_slot=14;
+    len_scp=288;
+    len_lcp=352;
+    len_fft=4096;
+    prb_len=3276;
+    len_sym=len_scp+len_fft;
+    len_shift_cp=len_lcp-len_scp;
+    
+    SearchLen=2*len_lcp;
+    
+    OFDMParam.len_IQ=len_IQ;
+    OFDMParam.len_slot=len_slot;
+    OFDMParam.len_scp=len_scp;
+    OFDMParam.len_lcp=len_lcp;
+    OFDMParam.len_fft=len_fft;
+    OFDMParam.prb_len=prb_len;
+    OFDMParam.SearchLen=SearchLen;
 %% load EU input data
 %load caps.mat
 %load matlab1029.mat
@@ -28,6 +46,7 @@ global Debug_view Debug_slotSTO_CFO
 view_freq=0;
 view_time=1;
 view_time_detail=0;
+view_timesignal_upslot_freq=1;
 view_caps=0;
 view_last=0;
 
@@ -83,6 +102,16 @@ if view_time==1
     %plot1msSignal(tant1,1);
     [slotCollectFreq0,slotUpCollectFreq0]=Process1msSignal(tant0,0);
     [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,1);
+    if view_timesignal_upslot_freq==1
+        [slotTsLen,UpSymbNum]=size(slotUpCollectFreq1);
+        UpSlotNum=UpSymbNum/len_slot;
+        for i=1:UpSlotNum
+            fRange=(i-1)*len_slot+1:i*len_slot;
+            Ant_view0=slotUpCollectFreq0(:,fRange);
+            Ant_view1=slotUpCollectFreq1(:,fRange);
+            [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation2Ant(Ant_view0,Ant_view1,i-1);
+        end
+    end
     %% detail signal analysis
     if view_time_detail==1
         SymbNum=floor(length(tant0)/(4096+288));
