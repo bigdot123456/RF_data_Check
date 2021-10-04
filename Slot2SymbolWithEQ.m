@@ -2,7 +2,7 @@ function [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlo
 %% split 1Slot 2 28 Symbol,1228800
 %  [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,OFDMParam)
 %  should input Slot Data in and LastSlotIn with some data near Slot In
-global Debug_slotSTO_CFO
+global Debug_slotSTO_CFO Debug_slotSTO_CFO_More
 if nargin<4
     len_IQ=1;
     len_slot=14;
@@ -114,7 +114,7 @@ fprintf("sto symb offset:");
 fprintf("%d ",pos_dev_sto');
 fprintf("\n");
 
-if Debug_slotSTO_CFO==1
+if Debug_slotSTO_CFO_More==1
     str=sprintf('%d ',pos_dev_sto);
     figure('NumberTitle', 'on', 'Name', "sto err:"+str);
     

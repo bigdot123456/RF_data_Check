@@ -9,25 +9,26 @@ addpath('./OFDM--STO-CFO');
 t=now;
 datestr(t,0)
 
-global Debug_view Debug_slotSTO_CFO
-    len_IQ=1;
-    len_slot=14;
-    len_scp=288;
-    len_lcp=352;
-    len_fft=4096;
-    prb_len=3276;
-    len_sym=len_scp+len_fft;
-    len_shift_cp=len_lcp-len_scp;
-    
-    SearchLen=2*len_lcp;
-    
-    OFDMParam.len_IQ=len_IQ;
-    OFDMParam.len_slot=len_slot;
-    OFDMParam.len_scp=len_scp;
-    OFDMParam.len_lcp=len_lcp;
-    OFDMParam.len_fft=len_fft;
-    OFDMParam.prb_len=prb_len;
-    OFDMParam.SearchLen=SearchLen;
+global Debug_view Debug_slotSTO_CFO Debug_slotSTO_CFO_More
+
+len_IQ=1;
+len_slot=14;
+len_scp=288;
+len_lcp=352;
+len_fft=4096;
+prb_len=3276;
+len_sym=len_scp+len_fft;
+len_shift_cp=len_lcp-len_scp;
+
+SearchLen=2*len_lcp;
+
+OFDMParam.len_IQ=len_IQ;
+OFDMParam.len_slot=len_slot;
+OFDMParam.len_scp=len_scp;
+OFDMParam.len_lcp=len_lcp;
+OFDMParam.len_fft=len_fft;
+OFDMParam.prb_len=prb_len;
+OFDMParam.SearchLen=SearchLen;
 %% load EU input data
 %load caps.mat
 %load matlab1029.mat
@@ -71,6 +72,7 @@ fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
 
 Debug_view=1;
 Debug_slotSTO_CFO=0;
+Debug_slotSTO_CFO_More=0;
 
 Bin_or_TXT=1; % 1: binary,0:txt
 if view_freq==1

@@ -86,9 +86,9 @@ for i=slot_inx
     end
     
     if i==1
-        len_cp=len_scp;
+        len_cp=len_lcp;
     elseif i==14
-        len_cp=len_scp/2;
+        len_cp=len_scp;
     else
         len_cp=len_scp;
     end
