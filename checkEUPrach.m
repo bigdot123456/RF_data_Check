@@ -81,8 +81,8 @@ if view_time==1
     tant1=tAntData(:,3);
     %plot1msSignal(tant0,0);
     %plot1msSignal(tant1,1);
-    [SymbolOut0,SymbolOutWithEQ0]=Process1msSignal(tant0,0);
-    [SymbolOut1,SymbolOutWithEQ1]=Process1msSignal(tant1,1);
+    [slotCollectFreq0,slotUpCollectFreq0]=Process1msSignal(tant0,0);
+    [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,1);
     %% detail signal analysis
     if view_time_detail==1
         SymbNum=floor(length(tant0)/(4096+288));
