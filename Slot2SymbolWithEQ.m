@@ -88,16 +88,16 @@ for i=2:len_slot
     pos_std(i)=symbol2_pos+(i-2)*(len_fft+len_scp)+len_scp/2;
 end
 
- [y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc]=slotSTO_CFO(y,OFDMParam);
+[y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc]=slotSTO_CFO(y,OFDMParam);
 pos_dev=symb_sto_sn_abs-pos_std;
 pos_best_cp=StartPoint_sto+symb_sto_sn-1;
 pos_dev_sto=pos_best_cp-pos_std;
 pos_dev_ref=StartPoint_sto+SearchLen+len_scp/2-pos_std;
 
 % check it again after CFO, now again with sto
- [y_symbFFTIn1,slot_sto1,slot_fc1,y_EQ1,symb_sto_sn_abs1,symb_sto_sn1,StartPoint_sto1,y_stoFFTIn_nofc1]=slotSTO_CFO(y_EQ,OFDMParam);
- SymbolOutWithEQ=y_symbFFTIn1;
- 
+[y_symbFFTIn1,slot_sto1,slot_fc1,y_EQ1,symb_sto_sn_abs1,symb_sto_sn1,StartPoint_sto1,y_stoFFTIn_nofc1]=slotSTO_CFO(y_EQ,OFDMParam);
+SymbolOutWithEQ=y_symbFFTIn1;
+
 pos_dev1=symb_sto_sn_abs1-pos_std;
 pos_ref=StartPoint_sto1-pos_std;
 pos_ref1(1)=StartPoint_sto1(1)+len_lcp/2+SearchLen;
@@ -107,7 +107,7 @@ pos_dev2=symb_sto_sn-symb_sto_sn1;
 pos_diff2=slot_sto-slot_sto1;
 fc_diff2=slot_fc-slot_fc1;
 
-fprintf("\tFC:%f ",fc_diff2');
+fprintf("FC1:%f FC2:%f ",slot_fc,slot_fc1');
 fprintf("sto symb offset:");
 fprintf("%d ",pos_dev_sto');
 fprintf("\n");

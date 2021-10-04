@@ -1,8 +1,8 @@
-function [slotCollectFreq,slotUp]=Process1msSignal(Ant_view,ant_num)
+function [slotCollectFreq,slotUpCollectFreq]=Process1msSignal(Ant_view,ant_num)
 %% process 1ms signal with STO & CFO
 % [slotCollectFreq,slotUp]=Process1msSignal(Ant_view,ant_num)
 % ant_num is used to figure view
-global Debug_view
+global Debug_view Ant_debug
 %global Debug_slotSTO_CFO;
 %global Debug_sto;
 

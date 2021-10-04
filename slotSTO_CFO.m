@@ -113,7 +113,7 @@ pos_symb=zeros(1,len_slot);
 
 slot_sto=floor(mean(symb_sto_sn(slot_inx_valid)));
 slot_sto_timing_error=slot_sto-SearchLen-len_scp/2-1;
-fprintf("slot sto:%d offset:%d ",slot_sto,slot_sto_timing_error);
+fprintf("sto:%d||%d ",slot_sto,slot_sto_timing_error);
 nn=1:len_scp;
 for i=slot_inx
     pos_fc=StartPoint_sto(i)+slot_sto;
