@@ -1,6 +1,7 @@
-function [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,SearchLen,OFDMParam)
+function [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,OFDMParam)
 %% split 1Slot 2 28 Symbol,1228800
-if nargin<5
+global Debug_slotSTO_CFO
+if nargin<4
     len_IQ=1;
     len_slot=14;
     len_scp=288;
@@ -9,33 +10,33 @@ if nargin<5
     prb_len=3276;
     len_sym=len_scp+len_fft;
     len_shift_cp=len_lcp-len_scp;
-   
+    
+    SearchLen=2*len_lcp;
+    
     OFDMParam.len_IQ=len_IQ;
     OFDMParam.len_slot=len_slot;
     OFDMParam.len_scp=len_scp;
     OFDMParam.len_lcp=len_lcp;
     OFDMParam.len_fft=len_fft;
     OFDMParam.prb_len=prb_len;
-elseif nargin==5
+    OFDMParam.SearchLen=SearchLen;
+elseif nargin==4
     len_IQ=OFDMParam.len_IQ;
     len_slot=OFDMParam.len_slot;
     len_scp=OFDMParam.len_scp;
     len_lcp=OFDMParam.len_lcp;
     len_fft=OFDMParam.len_fft;
     prb_len=OFDMParam.prb_len;
+    SearchLen=OFDMParam.SearchLen;
     len_sym=len_scp+len_fft;
     len_shift_cp=len_lcp-len_scp;
 end
 
-if nargin<4
-    SearchLen=len_lcp;
-end
-
 if nargin==1
     lastSlotIn=zeros(1,SearchLen);
-    nextSlotIn=zeros(1,SearchLen);
+    nextSlotIn=zeros(1,2*SearchLen);
 elseif nargin==2
-    nextSlotIn=zeros(1,SearchLen);
+    nextSlotIn=zeros(1,2*SearchLen);
 end
 %% get data
 % % malloc mem
@@ -46,7 +47,7 @@ end
 % sto_diff=zeros(SearchLen,len_slot);
 % CFO_est=zeros(1,len_slot);
 % y=[lastSlotIn(end-SearchLen+1:end) SlotIn nextSlotIn(1:SearchLen)];
-% 
+%
 % StartPoint=1; % from -SearchLen to SearchLen
 % [sto_pos, FFTDataIn,SymbolData,sto_diffsum]=SymbolSTOlcp(y,len_lcp,StartPoint,SearchLen); % bigdot works!
 % sto_sn(1)=sto_pos;
@@ -56,7 +57,7 @@ end
 % nn=1:len_lcp;
 % CFO_sum(1)=SymbolData(nn+len_fft)*SymbolData(nn)';
 % CFO_est(i)= angle(CFO_sum(1))/(2*pi);  % Eq.(5.27)
-% 
+%
 % nn=1:len_scp;
 % for i=2:len_slot
 %     StartPoint=(i-1)*(len_fft+len_scp)+(len_lcp-len_scp)+1; % from -SearchLen to SearchLen
@@ -65,26 +66,68 @@ end
 %     sto_FFTIn(i)=FFTDataIn;
 %     sto_CFOIn(i)=SymbolData;
 %     sto_diff(:,i)=sto_diffsum;
-%     
+%
 %     CFO_sum(i)=SymbolData(nn+len_fft)*SymbolData(nn)';
 %     CFO_est(i)= angle(CFO_sum(i))/(2*pi);  % Eq.(5.27)
 % end
-% 
+%
 % CFO_slotsum=sum(CFO_sum);
 % CFO_FC=angle(CFO_slotsum)/(2*pi);
-% 
-% nn=0:length(y)-1; 
+%
+% nn=0:length(y)-1;
 % y_CFO = y.*exp(j*2*pi*CFO_FC*nn/Nfft);
 
 % [a,b,c]%vertical concat
 % [a;b;c]% horizontal concat
 % a.' % a transpose not conjucte
-y=[lastSlotIn(end-SearchLen+1:end) ,SlotIn.',nextSlotIn(1:SearchLen)];
+y=[lastSlotIn(end-SearchLen+1:end) ,SlotIn.',nextSlotIn(1:2*SearchLen)];
+pos_std=zeros(1,len_slot);
+pos_std(1)=SearchLen+len_lcp/2;
+symbol2_pos=pos_std(1)+len_lcp/2+len_fft;
+for i=2:len_slot
+    pos_std(i)=symbol2_pos+(i-2)*(len_fft+len_scp)+len_scp/2;
+end
 
-[y_CFO,pos_sn,sto_sn,y_sto_FFTIn,y_CFO_FFTIn]=slotSTO_CFO(y,OFDMParam);
+ [y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc]=slotSTO_CFO(y,OFDMParam);
+pos_dev=symb_sto_sn_abs-pos_std;
+pos_best_cp=StartPoint_sto+symb_sto_sn-1;
+pos_dev_sto=pos_best_cp-pos_std;
+pos_dev_ref=StartPoint_sto+SearchLen+len_scp/2-pos_std;
+
 % check it again after CFO, now again with sto
-[y_CFO1,pos_sn1,sto_sn1,y_sto_FFTIn1,y_CFO_FFTIn1]=slotSTO_CFO(y_CFO,OFDMParam);
-SymbolOutWithEQ=y_CFO_FFTIn1;
+ [y_symbFFTIn1,slot_sto1,slot_fc1,y_EQ1,symb_sto_sn_abs1,symb_sto_sn1,StartPoint_sto1,y_stoFFTIn_nofc1]=slotSTO_CFO(y_EQ,OFDMParam);
+ SymbolOutWithEQ=y_symbFFTIn1;
+ 
+pos_dev1=symb_sto_sn_abs1-pos_std;
+pos_ref=StartPoint_sto1-pos_std;
+pos_ref1(1)=StartPoint_sto1(1)+len_lcp/2+SearchLen;
+pos_ref1(2:14)=StartPoint_sto1(2:14)+len_scp/2+SearchLen;
+
+pos_dev2=symb_sto_sn-symb_sto_sn1;
+pos_diff2=slot_sto-slot_sto1;
+fc_diff2=slot_fc-slot_fc1;
+
+fprintf("\tFC:%f ",fc_diff2');
+fprintf("sto symb offset:");
+fprintf("%d ",pos_dev_sto');
+fprintf("\n");
+
+if Debug_slotSTO_CFO==1
+    str=sprintf('%d ',pos_dev_sto);
+    figure('NumberTitle', 'on', 'Name', "sto err:"+str);
+    
+    plot(pos_dev,'.');
+    hold on;
+    plot(pos_dev1,'r.');
+    plot(pos_dev_sto,'g.');
+    
+    plot(pos_dev2,'m.');
+    plot(pos_ref,'c.');
+    grid on;
+    str=sprintf('STO dev with ave: %d max:%d',sum(abs(pos_dev)),max(abs(pos_dev)));
+    title(str)
+end
+
 %% normal split symbol
 len_sym=(len_fft+len_scp);%% normal cp, should 288, long cp should be 352
 len_ts_per_slot=(len_slot*len_sym+len_lcp-len_scp)*len_IQ;

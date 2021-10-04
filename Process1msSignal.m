@@ -2,6 +2,9 @@ function [slotCollectFreq,slotUp]=Process1msSignal(Ant_view,ant_num)
 %% process 1ms signal with STO & CFO
 % [slotCollectFreq,slotUp]=Process1msSignal(Ant_view,ant_num)
 % ant_num is used to figure view
+global Debug_view
+%global Debug_slotSTO_CFO;
+%global Debug_sto;
 
 if nargin==1
     ant_num=0;
@@ -13,7 +16,7 @@ end
 if Ant_debug==1
     save 'Ant_view.mat'
 end
-global Debug_view
+
 
 %% basic parameter
 MIN=+30;
@@ -26,8 +29,8 @@ slotCollect=reshape(Ant_view(1:slotNum*ms_5TsNum),ms_5TsNum,[]);
 slotCollectFreq=zeros(len_fft,slotNum*symNum);
 slotCollectTime=zeros(len_fft,slotNum*symNum);
 upcnt=1;
-slotUpCollectTime=zeros(len_fft,ceil(slotNum/10*4)*symNum);
-slotUpCollectFreq=zeros(len_fft,ceil(slotNum/10*4)*symNum);
+slotUpCollectTime=zeros(len_fft,ceil(slotNum/10*2)*symNum);
+slotUpCollectFreq=zeros(len_fft,ceil(slotNum/10*2)*symNum);
 
 for m=1:slotNum
     slotFFTIn=splitSlot2Symbol(slotCollect(:,m));
@@ -56,7 +59,7 @@ for m=1:slotNum
     
 end
 
-if Debug_view
+if Debug_view==1
     %% start Timing &Freqency domain analsys
     symbol_tabs=20*log10(abs(slotCollectTime));
     symbol_tabs(symbol_tabs==-inf)=MIN;
