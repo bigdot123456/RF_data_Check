@@ -1,4 +1,4 @@
-function [slot_sto_diff_min]=Process1msSignalSto(Ant_view,ant_num)
+function [slot_sto_diff]=Process1msSignalSto(Ant_view,ant_num)
 %% process 1ms signal with STO & CFO
 % [slotCollectFreq,slotUp]=Process1msSignal(Ant_view,ant_num)
 % ant_num is used to figure view
@@ -39,9 +39,12 @@ OFDMParam.SearchLen=SearchLen;
 %% search lcp
 y=[Ant_view;Ant_view(1:2*len_fft,1);zeros(len_lcp,1)];
 len=length(Ant_view);
-searchLen=len;
+%searchLen=len;
+searchLen=61440*10;
 
 sto_diffsum=zeros(1,searchLen);
+sto_corrsum=zeros(1,searchLen);
+
 for k =1:searchLen
     pos1=(k:k+len_scp-1);
     pos2=pos1+len_fft;
@@ -50,32 +53,79 @@ for k =1:searchLen
     sto_diffsum(k) = SquareSum;
 end
 
-[sto_diff_min,STO_est]=min(sto_diffsum);
-slotNum=floor(len/len_slot_ts);
-slot_sto_diff_min=reshape(sto_diff_min(1:slotNum*len_slot_ts),len_slot_ts,slotNum);
+for k =1:searchLen
+    pos1=(k:k+len_scp-1);
+    pos2=pos1+len_fft;
+    temp = y(pos1)'*y(pos2);
+    corrSum=abs(temp);
+    sto_corrsum(k) = corrSum;
+end
 
+slotNum=floor(searchLen/len_slot_ts);
+
+[sto_diff_min,STO_est0]=min(sto_diffsum);
+slot_sto_diff=reshape(sto_diffsum(1:slotNum*len_slot_ts),len_slot_ts,slotNum);
+
+[sto_corr_max,STO_est1]=min(sto_corrsum);
+slot_sto_corr=reshape(sto_corrsum(1:slotNum*len_slot_ts),len_slot_ts,slotNum);
 %% plot all debug figure
-if Debug_slotSTO_CFO
+if Debug_slotSTO_CFO==1
     % full view
-    str=sprintf('sto with %d point',len);
+    str=sprintf('sto correlate with %d point,max:%d,best:%d',len,sto_corr_max,STO_est1);
     figure('NumberTitle', 'on', 'Name', str);
-    plot(sto_diff_min,'.m');
+    plot(sto_corrsum,'.m');
     title(str);
     grid on;
     % slot view
-    for i=1:slotNum
-        str=sprintf('slot %d sto with value %d pos:%d',i,min(slot_sto_diff_min(:,i)));
-        figure('NumberTitle', 'on', 'Name', str);
-        plot(slot_sto_diff_min(:,i),'.m');
-        title(str);
-        grid on;
-        
+    if Debug_slotSTO_CFO_More==1
+        for i=1:slotNum
+            str=sprintf('slot %d sto correlate with value %d pos:%d',i-1,min(slot_sto_corr(:,i)));
+            figure('NumberTitle', 'on', 'Name', str);
+            plot(slot_sto_corr(:,i),'.');
+            title(str);
+            grid on;
+            
+        end
     end
     
     % 3D view
-    str=sprintf('Ant%d sto signal with %d point and zeronum %d',ant_num,len);
+    str=sprintf('Ant%d sto correlate signal with %d point and zeronum %d',ant_num,len);
     figure('NumberTitle', 'on', 'Name', str);
-    mesh(slot_sto_diff_min,'FaceAlpha','0.5');
+    mesh(slot_sto_corr,'FaceAlpha','0.5');
+    x1=xlabel('Symbol Direction: 1 -> 14');
+    x2=ylabel('Sample subcarrier Direction: 1 -> 4096');
+    x3=zlabel('Sample value scale in original scale');
+    set(x1,'Rotation',30);
+    set(x2,'Rotation',-30);
+    %plot(abs(Ant_view));
+    title(str);
+    grid on;
+    colorbar;
+    
+end
+%% plot all debug figure
+if Debug_slotSTO_CFO==1
+    % full view
+    str=sprintf('sto with diff %d point,min:%d,best:%d',len,sto_diff_min,STO_est0);
+    figure('NumberTitle', 'on', 'Name', str);
+    plot(sto_diffsum,'.m');
+    title(str);
+    grid on;
+    % slot view
+    if Debug_slotSTO_CFO_More==1
+        for i=1:slotNum
+            str=sprintf('slot %d sto diff with value %d pos:%d',i-1,min(slot_sto_diff(:,i)));
+            figure('NumberTitle', 'on', 'Name', str);
+            plot(slot_sto_diff(:,i),'.');
+            title(str);
+            grid on;
+            
+        end
+    end
+    % 3D view
+    str=sprintf('Ant%d sto diff signal with %d point %d',ant_num,len);
+    figure('NumberTitle', 'on', 'Name', str);
+    mesh(slot_sto_diff,'FaceAlpha','0.5');
     x1=xlabel('Symbol Direction: 1 -> 14');
     x2=ylabel('Sample subcarrier Direction: 1 -> 4096');
     x3=zlabel('Sample value scale in original scale');
