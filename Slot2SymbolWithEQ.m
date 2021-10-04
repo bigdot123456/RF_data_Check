@@ -1,5 +1,7 @@
 function [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,OFDMParam)
 %% split 1Slot 2 28 Symbol,1228800
+%  [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,OFDMParam)
+%  should input Slot Data in and LastSlotIn with some data near Slot In
 global Debug_slotSTO_CFO
 if nargin<4
     len_IQ=1;
@@ -33,10 +35,10 @@ elseif nargin==4
 end
 
 if nargin==1
-    lastSlotIn=zeros(1,SearchLen);
-    nextSlotIn=zeros(1,2*SearchLen);
+    lastSlotIn=zeros(SearchLen,1);
+    nextSlotIn=zeros(2*SearchLen,1);
 elseif nargin==2
-    nextSlotIn=zeros(1,2*SearchLen);
+    nextSlotIn=zeros(2*SearchLen,1);
 end
 %% get data
 % % malloc mem
@@ -80,7 +82,7 @@ end
 % [a,b,c]%vertical concat
 % [a;b;c]% horizontal concat
 % a.' % a transpose not conjucte
-y=[lastSlotIn(end-SearchLen+1:end) ,SlotIn.',nextSlotIn(1:2*SearchLen)];
+y=[lastSlotIn(end-SearchLen+1:end);SlotIn;nextSlotIn(1:2*SearchLen)];
 pos_std=zeros(1,len_slot);
 pos_std(1)=SearchLen+len_lcp/2;
 symbol2_pos=pos_std(1)+len_lcp/2+len_fft;
@@ -88,7 +90,7 @@ for i=2:len_slot
     pos_std(i)=symbol2_pos+(i-2)*(len_fft+len_scp)+len_scp/2;
 end
 
-[y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc]=slotSTO_CFO(y,OFDMParam);
+[y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc]=slotSTO_CFO(y.',OFDMParam);
 pos_dev=symb_sto_sn_abs-pos_std;
 pos_best_cp=StartPoint_sto+symb_sto_sn-1;
 pos_dev_sto=pos_best_cp-pos_std;
@@ -107,7 +109,7 @@ pos_dev2=symb_sto_sn-symb_sto_sn1;
 pos_diff2=slot_sto-slot_sto1;
 fc_diff2=slot_fc-slot_fc1;
 
-fprintf("FC1:%f FC2:%f ",slot_fc,slot_fc1');
+fprintf("FC1:%f FC2:%f ",slot_fc,slot_fc1);
 fprintf("sto symb offset:");
 fprintf("%d ",pos_dev_sto');
 fprintf("\n");

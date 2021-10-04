@@ -46,7 +46,12 @@ for m=1:slotNum
     if m1==10 || m1==9 ||m1==0 || m1==19
         posUp=(upcnt-1)*symNum+1:upcnt*symNum;
         
-        [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(slotCollect(:,m));
+        if m==slotNum
+            %  [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,OFDMParam)
+            [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(slotCollect(:,m),slotCollect(:,m-1));
+        else
+            [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(slotCollect(:,m),slotCollect(:,m-1),slotCollect(:,m+1));
+        end
         slotUpCollectTime(:,posUp)=SymbolOutWithEQ;
         for n=1:symNum
             slotFFTout=fft(SymbolOutWithEQ(:,n));

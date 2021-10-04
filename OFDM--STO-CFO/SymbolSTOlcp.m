@@ -63,7 +63,7 @@ for k =1:searchRange
     pos1=StartPoint-1+(k:k+Ng-1);
     pos2=pos1+Nfft;
     temp = abs(y(pos1)) - abs(y(pos2));
-    SquareSum=temp*temp';
+    SquareSum=sum(temp.^2);
     sto_diffsum(k) = SquareSum;
 end
 [sto_diff_min,STO_est]=min(sto_diffsum);
