@@ -9,7 +9,7 @@ addpath('./OFDM--STO-CFO');
 t=now;
 datestr(t,0)
 
-global Debug_view Debug_slotSTO_CFO Debug_slotSTO_CFO_More
+global Debug_view Debug_view_Freq Debug_view3D Debug_view_constellation Debug_slotSTO_CFO Debug_slotSTO_CFO_More Debug_slotSTO_CFO_symblo_diff
 
 len_IQ=1;
 len_slot=14;
@@ -69,10 +69,15 @@ tF='/mnt/oran/L1/chendalong/0928_0959/t0_ddr_data.txt'; % in shelf box,5m
 tF='~/Downloads/t1_ddr_data.txt'; % in shelf box,10m,bin format，2 stream
 %tF='~/Downloads/t5_ddr_data.txt'; % in shelf box,10m,bin format,1 stream
 fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
+tF='/Volumes/ORAN/L1/chendalong/1005_1551/t4_ddr_data.txt'; % in shelf box,1m,1 stream
 
-Debug_view=1;
-Debug_slotSTO_CFO=0;
+Debug_view=0;
+Debug_slotSTO_CFO=1;
 Debug_slotSTO_CFO_More=0;
+Debug_slotSTO_CFO_symblo_diff=1;
+Debug_view_Freq=1;
+Debug_view3D=1;
+Debug_view_constellation=1;
 
 Bin_or_TXT=1; % 1: binary,0:txt
 if view_freq==1
@@ -97,17 +102,22 @@ coeff = phase_coeff;
 % grid on;
 % title('FPGA freqency log Data,6-agc does not work');
 %% seperate AntData
+maxViewSlotNum=20;
 if view_time==1
     tant0=tAntData(:,1);
     tant1=tAntData(:,3);
     %plot1msSignal(tant0,0);
     %plot1msSignal(tant1,1);
-    [slotCollectFreq0,slotUpCollectFreq0]=Process1msSignal(tant0,0);
-    [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,1);
+    [slotCollectFreq0,slotUpCollectFreq0]=Process1msSignal(tant0,maxViewSlotNum,0);
+    [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,maxViewSlotNum,1);
     if view_timesignal_upslot_freq==1
         [slotTsLen,UpSymbNum]=size(slotUpCollectFreq1);
         UpSlotNum=UpSymbNum/len_slot;
-        for i=1:UpSlotNum
+        
+        view_slot=1:UpSlotNum;
+        view_slot=1:min(floor(maxViewSlotNum/10*2),UpSlotNum);
+        
+        for i=view_slot
             fRange=(i-1)*len_slot+1:i*len_slot;
             Ant_view0=slotUpCollectFreq0(:,fRange);
             Ant_view1=slotUpCollectFreq1(:,fRange);

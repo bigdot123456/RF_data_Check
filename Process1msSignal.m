@@ -1,16 +1,20 @@
-function [slotCollectFreq,slotUpCollectFreq]=Process1msSignal(Ant_view,ant_num)
+function [slotCollectFreq,slotUpCollectFreq]=Process1msSignal(Ant_view,viewNum,ant_num)
 %% process 1ms signal with STO & CFO
-% [slotCollectFreq,slotUp]=Process1msSignal(Ant_view,ant_num)
+% [slotCollectFreq,slotUp]=Process1msSignal(Ant_view,viewNum,ant_num)
 % ant_num is used to figure view
 global Debug_view Ant_debug Debug_slotSTO_CFO Debug_slotSTO_CFO_More
 %global Debug_slotSTO_CFO;
 %global Debug_sto;
 
-if nargin==1
+if nargin==0
     ant_num=0;
-elseif nargin==0
-    ant_num=0;
+    viewNum=400;
     load './Ant_view.mat'
+elseif nargin==1
+    viewNum=400;
+    ant_num=0;
+elseif nargin==2
+    ant_num=0;
 end
 
 if Ant_debug==1
@@ -32,7 +36,8 @@ upcnt=1;
 slotUpCollectTime=zeros(len_fft,ceil(slotNum/10*2)*symNum);
 slotUpCollectFreq=zeros(len_fft,ceil(slotNum/10*2)*symNum);
 
-for m=1:slotNum
+viewSlotNum=min(slotNum,viewNum);
+for m=1:viewSlotNum
     slotFFTIn=splitSlot2Symbol(slotCollect(:,m));
     
     slotCollectTime(:,(m-1)*symNum+1:m*symNum)=slotFFTIn;

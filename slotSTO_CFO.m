@@ -3,7 +3,7 @@ function [y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoi
 %  [y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc]=slotSTO_CFO(y,OFDMParam)
 %  y_symbFFTIn: FFT input for fft dispose
 %  slot_sto: symbol best position for FFT
-%  slot fc: frequency offset with normalized.  
+%  slot fc: frequency offset with normalized.
 %   y_EQ: all compensation for y.
 %   symb_sto_sn_abs: every symbol sto with abs position
 %   symb_sto_sn
@@ -20,7 +20,7 @@ function [y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoi
 %     len_shift_cp=len_lcp-len_scp;
 %     SearchLen=len_lcp;
 %
-global Debug_slotSTO_CFO
+global Debug_slotSTO_CFO_symblo_diff
 if nargin==1
     len_IQ=1;
     len_slot=14;
@@ -94,7 +94,7 @@ for i=slot_inx
     end
     
     [sto_pos, symb_sto_pos_abs0,symbFFTIn,symbFullData,sto_diffsum]=SymbolSTOlcp(y,len_cp,StartPoint_sto(i),SearchLen); % bigdot works!
-
+    
     symb_sto_sn(i)=sto_pos;
     symb_sto_sn_abs(i)=symb_sto_pos_abs0;
     y_stoFFTIn_nofc(:,i)=symbFFTIn;
@@ -139,8 +139,8 @@ for i=slot_inx
     pos=pos_symb(i)+(1:len_fft)-1;
     y_symbFFTIn(:,i)=y_EQ(pos);
 end
-
-if Debug_slotSTO_CFO==1
+%% plot view result
+if Debug_slotSTO_CFO_symblo_diff==1
     str=sprintf('Plot slot sto with %d point',length(y));
     figure('NumberTitle', 'on', 'Name', str);
     %figure('NumberTitle', 'off', 'Name', str);
@@ -151,7 +151,6 @@ if Debug_slotSTO_CFO==1
         title(str);
         grid on;
     end
-    
 end
 
 end

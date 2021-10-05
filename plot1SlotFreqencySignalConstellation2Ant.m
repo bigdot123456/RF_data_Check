@@ -5,7 +5,7 @@ function [symbol_abs0,symbol_abs1]=plot1SlotFreqencySignalConstellation2Ant(Symb
 % slot_num is No.slot used to print message
 % symbol_abs0: 20log(*) result
 %
-global Debug_view Debug_view3D
+global Debug_view_Freq Debug_view3D Debug_view_constellation
 if nargin==1
     slot_num=0;
     ant_num=1;
@@ -47,7 +47,7 @@ for i=1:slotSymbNum
 end
 %% plot works
 if Debug_view3D
-    str=sprintf('Ant%d slot %d continuous frequency signal with %d point and zeronum %d',0,slot_num,length(SymbFreq_ant0),zerobit);
+    str=sprintf('Ant%d slot %d continuous frequency signal with %d point',0,slot_num,length(SymbFreq_ant0));
     figure('NumberTitle', 'on', 'Name', str);
     mesh(abs(SymbFreq_ant0),'FaceAlpha','0.5');
     x1=xlabel('Symbol Direction: 1 -> 14');
@@ -75,7 +75,7 @@ if Debug_view3D
     colorbar;
     
     if ant_num ==2
-        str=sprintf('Ant%d slot %d continuous frequency signal with %d point and zeronum %d',1,slot_num,length(SymbFreq_ant0),zerobit);
+        str=sprintf('Ant%d slot %d continuous frequency signal with %d point',1,slot_num,length(SymbFreq_ant0));
         figure('NumberTitle', 'on', 'Name', str);
         mesh(abs(SymbFreq_ant1),'FaceAlpha','0.5');
         x1=xlabel('Symbol Direction: 1 -> 14');
@@ -109,7 +109,7 @@ if Scale==0
     Scale=1
 end
 
-if Debug_view==1
+if Debug_view_Freq==1
     str=sprintf('Ant.0 slot %d Freqency spectrum',slot_num);
     figure('NumberTitle', 'on', 'Name', str);
     subplot(5,3,15);
@@ -128,7 +128,7 @@ if Debug_view==1
         plot(inx1,xy(inx1),'.');
         hold on;
         plot(inx2,xy(inx2),'r.');
-
+        
         symbol_max=max(symbol_abs0(:,i));
         symbol_ave=mean(symbol_abs0(:,i));
         
@@ -147,7 +147,7 @@ if Debug_view==1
     end
 end
 
-if Debug_view==1
+if Debug_view_Freq==1
     str=sprintf('Ant.1 slot %d Freqency spectrum',slot_num);
     figure('NumberTitle', 'on', 'Name', str);
     subplot(5,3,15);
@@ -185,5 +185,7 @@ if Debug_view==1
     end
 end
 %% start plot constellation
-plot1SlotConstellation_Inner(SymbFreq_ant0(:,1:slotSymbNum),slot_num,512);
-plot1SlotConstellation_Inner(SymbFreq_ant1(:,1:slotSymbNum),slot_num,512);
+if Debug_view_constellation==1
+    plot1SlotConstellation_Inner(SymbFreq_ant0(:,1:slotSymbNum),slot_num,512);
+    plot1SlotConstellation_Inner(SymbFreq_ant1(:,1:slotSymbNum),slot_num,512);
+end
