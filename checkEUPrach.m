@@ -70,6 +70,7 @@ tF='~/Downloads/t1_ddr_data.txt'; % in shelf box,10m,bin format，2 stream
 %tF='~/Downloads/t5_ddr_data.txt'; % in shelf box,10m,bin format,1 stream
 fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
 tF='/Volumes/ORAN/L1/chendalong/1005_1551/t4_ddr_data.txt'; % in shelf box,1m,1 stream
+tF='./20211008_ddr_data.txt'; % in shelf box,1m,1 stream
 
 Debug_view=0;
 Debug_slotSTO_CFO=1;

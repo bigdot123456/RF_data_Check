@@ -111,7 +111,7 @@ fc_diff2=slot_fc-slot_fc1;
 
 fprintf("FC1:%f FC2:%f ",slot_fc,slot_fc1);
 fprintf("sto symb offset:");
-fprintf("%d ",pos_dev_sto');
+fprintf("%d->%d ",pos_dev_sto,pos_std');
 fprintf("\n");
 
 if Debug_slotSTO_CFO_More==1
