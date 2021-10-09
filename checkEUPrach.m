@@ -71,6 +71,7 @@ tF='~/Downloads/t1_ddr_data.txt'; % in shelf box,10m,bin format，2 stream
 fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
 tF='/Volumes/ORAN/L1/chendalong/1005_1551/t4_ddr_data.txt'; % in shelf box,1m,1 stream
 tF='./20211008_ddr_data.txt'; % in shelf box,1m,1 stream
+%tF='./File.iq/File_2021-10-08090021.complex.1ch.float32';
 
 Debug_view=0;
 Debug_slotSTO_CFO=1;
@@ -80,6 +81,7 @@ Debug_view_Freq=1;
 Debug_view3D=1;
 Debug_view_constellation=1;
 
+%RS8900=1; % 1: use R&S instrument,0: EU get data
 Bin_or_TXT=1; % 1: binary,0:txt
 if view_freq==1
     if Bin_or_TXT==1
