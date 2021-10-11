@@ -71,7 +71,9 @@ tF='~/Downloads/t1_ddr_data.txt'; % in shelf box,10m,bin format，2 stream
 fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
 tF='/Volumes/ORAN/L1/chendalong/1005_1551/t4_ddr_data.txt'; % in shelf box,1m,1 stream
 tF='./20211008_ddr_data.txt'; % in shelf box,1m,1 stream
-%tF='./File.iq/File_2021-10-08090021.complex.1ch.float32';
+%tF='./File.iq/File_2021-10-08090021.complex.1ch.float32'
+tF='/Volumes/ORAN/L1/chendalong/1011_1848/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
+
 
 Debug_view=0;
 Debug_slotSTO_CFO=1;
