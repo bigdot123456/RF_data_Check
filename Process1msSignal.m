@@ -21,7 +21,8 @@ if Ant_debug==1
     save 'Ant_view.mat'
 end
 
-
+cfgInfo.slot=ant_num;
+cfgInfo.ant=0;
 %% basic parameter
 MIN=+30;
 
@@ -47,15 +48,16 @@ for m=1:viewSlotNum
         slotCollectFreq(:,(m-1)*symNum+n)=slotFFTout1;
     end
     
+    cfgInfo.slot=m-1;
     m1=mod(m,20);
-    if m1==10 || m1==9 ||m1==0 || m1==19
+    if m1==10 || m1==9 ||m1==0 || m1==19 || m1==5 || m1==15
         posUp=(upcnt-1)*symNum+1:upcnt*symNum;
         
         if m==slotNum
             %  [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,OFDMParam)
-            [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(slotCollect(:,m),slotCollect(:,m-1));
+            [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(slotCollect(:,m),slotCollect(:,m-1),zeros(4096,1),cfgInfo);
         else
-            [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(slotCollect(:,m),slotCollect(:,m-1),slotCollect(:,m+1));
+            [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(slotCollect(:,m),slotCollect(:,m-1),slotCollect(:,m+1),cfgInfo);
         end
         slotUpCollectTime(:,posUp)=SymbolOutWithEQ;
         for n=1:symNum

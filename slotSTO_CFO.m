@@ -1,4 +1,4 @@
-function [y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc]=slotSTO_CFO(y,OFDMParam)
+function [y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc,FFTUsed_pos]=slotSTO_CFO(y,cfgInfo,OFDMParam)
 %% first set input parameter
 %  [y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc]=slotSTO_CFO(y,OFDMParam)
 %  y_symbFFTIn: FFT input for fft dispose
@@ -21,7 +21,7 @@ function [y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoi
 %     SearchLen=len_lcp;
 %
 global Debug_slotSTO_CFO_symblo_diff
-if nargin==1
+if nargin<3
     len_IQ=1;
     len_slot=14;
     len_scp=288;
@@ -40,7 +40,7 @@ if nargin==1
     OFDMParam.prb_len=prb_len;
     OFDMParam.SearchLen=SearchLen;
     
-elseif nargin==2
+elseif nargin==3
     len_IQ=OFDMParam.len_IQ;
     len_slot=OFDMParam.len_slot;
     len_scp=OFDMParam.len_scp;
@@ -52,7 +52,10 @@ elseif nargin==2
     len_sym=len_scp+len_fft;
     len_shift_cp=len_lcp-len_scp;
 end
-
+if nargin<2
+    cfgInfo.slot=0;
+    cfgInfo.ant=0;
+end
 %% malloc memory
 symb_sto_sn=zeros(1,len_slot);
 symb_sto_sn_abs=zeros(1,len_slot);
@@ -109,7 +112,7 @@ end
 %%  use STO result to Freqeuncy Offset Cancellor
 CFO_sum_final=zeros(1,len_slot);
 CFO_est_final=zeros(1,len_slot);
-pos_symb=zeros(1,len_slot);
+FFTUsed_pos=zeros(1,len_slot);
 
 slot_sto=floor(mean(symb_sto_sn(slot_inx_valid)));
 slot_sto_timing_error=slot_sto-SearchLen-len_scp/2-1;
@@ -135,13 +138,13 @@ for i=slot_inx
     else
         len_cp=len_scp;
     end
-    pos_symb(i)=StartPoint_sto(i)+slot_sto+len_cp/2;
-    pos=pos_symb(i)+(1:len_fft)-1;
+    FFTUsed_pos(i)=StartPoint_sto(i)+slot_sto+len_cp/2;
+    pos=FFTUsed_pos(i)+(1:len_fft)-1;
     y_symbFFTIn(:,i)=y_EQ(pos);
 end
 %% plot view result
 if Debug_slotSTO_CFO_symblo_diff==1
-    str=sprintf('Plot slot sto with %d point',length(y));
+    str=sprintf('Plot slot%d ant%d sto with %d point',cfgInfo.slot,cfgInfo.ant,length(y));
     figure('NumberTitle', 'on', 'Name', str);
     %figure('NumberTitle', 'off', 'Name', str);
     for i=slot_inx

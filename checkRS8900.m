@@ -48,12 +48,14 @@ Debug_SlotSep=1;
 fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
 tF='./File.iq/File_2021-10-08090021.complex.1ch.float32';
 tF='/Volumes/ORAN/L1/chendalong/1011_1848/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
+tF='/Volumes/ORAN/L1/chendalong/1012_1113/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
+%tF='./1012.iq/File_2021-10-12025644.complex.1ch.float32'; % on the air with 5m
 
 EU_or_RS8960=1;
 Debug_view=0;
-Debug_slotSTO_CFO=1;
+Debug_slotSTO_CFO=0;
 Debug_slotSTO_CFO_More=0;
-Debug_slotSTO_CFO_symblo_diff=1;
+Debug_slotSTO_CFO_symblo_diff0;
 Debug_view_Freq=1;
 Debug_view3D=1;
 Debug_view_constellation=1;
@@ -66,6 +68,7 @@ else
     [cpx]=ReadRSDataFloat32(tF);
 end
 [b_pos_edge,slot_sep_length,slot_blank_length]=Process1msSep(cpx);
+%[b_pos_edge,slot_sep_length,slot_blank_length,b_pos_edge0,b_neg_edge0]=Process1msSep(cpx,0.03);
 Ant_view=cpx(b_pos_edge(1):end);
 
 %% start process sto

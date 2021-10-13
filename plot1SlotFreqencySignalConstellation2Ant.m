@@ -163,10 +163,15 @@ if Debug_view_Freq==1
         len=length(xy);
         inx1=1:2:len;
         inx2=2:2:len;
-        plot(inx1,xy(inx1),'.');
-        hold on;
-        plot(inx2,xy(inx2),'m.');
-        
+        if i==3 || i==12
+            plot(inx1,xy(inx1),'.');
+            hold on;
+            plot(inx2,xy(inx2),'r.');
+        else
+            plot(inx1,xy(inx1),'-g');
+            hold on;
+            plot(inx2,xy(inx2),'-m');
+        end
         symbol_max=max(symbol_abs1(:,i));
         symbol_ave=mean(symbol_abs1(:,i));
         

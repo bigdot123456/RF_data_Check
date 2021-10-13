@@ -1,4 +1,4 @@
-function [b_pos_edge,slot_sep_length,slot_blank_length]=Process1msSep(cpx,ThresholdRef)
+function [b_pos_edge,slot_sep_length,slot_blank_length,b_pos_edge0,b_neg_edge0]=Process1msSep(cpx,ThresholdRef)
 %% plot slot frequency & constellation result
 % [cpx,b_pos_edge,slot_sep_length]=ReadRSDataFloat32(filename)
 % result is as following:
@@ -102,7 +102,7 @@ if Debug_SlotSep==1
     hold on;
     plot(-abs(cpx_absLow),'r');
     title(str);
-    grid on;
+    grid on; 
     axis([0,b_len+10,-threshold*10,threshold*10])
     
     % second for postion seperating

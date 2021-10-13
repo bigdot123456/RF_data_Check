@@ -1,9 +1,9 @@
-function [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,OFDMParam)
+function [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,cfgInfo,OFDMParam)
 %% split 1Slot 2 28 Symbol,1228800
 %  [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,OFDMParam)
 %  should input Slot Data in and LastSlotIn with some data near Slot In
 global Debug_slotSTO_CFO Debug_slotSTO_CFO_More
-if nargin<4
+if nargin<5
     len_IQ=1;
     len_slot=14;
     len_scp=288;
@@ -22,7 +22,7 @@ if nargin<4
     OFDMParam.len_fft=len_fft;
     OFDMParam.prb_len=prb_len;
     OFDMParam.SearchLen=SearchLen;
-elseif nargin==4
+elseif nargin==5
     len_IQ=OFDMParam.len_IQ;
     len_slot=OFDMParam.len_slot;
     len_scp=OFDMParam.len_scp;
@@ -34,12 +34,18 @@ elseif nargin==4
     len_shift_cp=len_lcp-len_scp;
 end
 
+if nargin<4
+    cfgInfo.slot=0;
+    cfgInfo.ant=0;
+end
+
 if nargin==1
     lastSlotIn=zeros(SearchLen,1);
     nextSlotIn=zeros(2*SearchLen,1);
 elseif nargin==2
     nextSlotIn=zeros(2*SearchLen,1);
 end
+
 %% get data
 % % malloc mem
 % sto_sn=zeros(1,len_slot);
@@ -90,38 +96,51 @@ for i=2:len_slot
     pos_std(i)=symbol2_pos+(i-2)*(len_fft+len_scp)+len_scp/2;
 end
 
-[y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc]=slotSTO_CFO(y.',OFDMParam);
-pos_dev=symb_sto_sn_abs-pos_std;
+[y_symbFFTIn,slot_sto,slot_fc,y_EQ,symb_sto_sn_abs,symb_sto_sn,StartPoint_sto,y_stoFFTIn_nofc,FFTUsed_pos]=slotSTO_CFO(y.',cfgInfo,OFDMParam);
+
 pos_best_cp=StartPoint_sto+symb_sto_sn-1;
-pos_dev_sto=pos_best_cp-pos_std;
 pos_dev_ref=StartPoint_sto+SearchLen+len_scp/2-pos_std;
 
+pos_ref(1)=StartPoint_sto(1)+len_lcp/2+SearchLen;
+pos_ref(2:14)=StartPoint_sto(2:14)+len_scp/2+SearchLen;
+
+pos_sto=symb_sto_sn_abs-pos_ref;
+
+SymbolOutWithEQ=y_symbFFTIn;
 % check it again after CFO, now again with sto
-[y_symbFFTIn1,slot_sto1,slot_fc1,y_EQ1,symb_sto_sn_abs1,symb_sto_sn1,StartPoint_sto1,y_stoFFTIn_nofc1]=slotSTO_CFO(y_EQ,OFDMParam);
-SymbolOutWithEQ=y_symbFFTIn1;
+% [y_symbFFTIn1,slot_sto1,slot_fc1,y_EQ1,symb_sto_sn_abs1,symb_sto_sn1,StartPoint_sto1,y_stoFFTIn_nofc1]=slotSTO_CFO(y_EQ,cfgInfo,OFDMParam);
+% SymbolOutWithEQ=y_symbFFTIn1;
+% 
+% pos_dev1=symb_sto_sn_abs1-pos_std;
+% pos_ref=StartPoint_sto1-pos_std;
+% 
+% pos_dev2=symb_sto_sn-symb_sto_sn1;
+% pos_diff2=slot_sto-slot_sto1;
+% fc_diff2=slot_fc-slot_fc1;
 
-pos_dev1=symb_sto_sn_abs1-pos_std;
-pos_ref=StartPoint_sto1-pos_std;
-pos_ref1(1)=StartPoint_sto1(1)+len_lcp/2+SearchLen;
-pos_ref1(2:14)=StartPoint_sto1(2:14)+len_scp/2+SearchLen;
-
-pos_dev2=symb_sto_sn-symb_sto_sn1;
-pos_diff2=slot_sto-slot_sto1;
-fc_diff2=slot_fc-slot_fc1;
-
-fprintf("FC1:%f FC2:%f ",slot_fc,slot_fc1);
-fprintf("sto symb offset:");
-fprintf("%d->%d ",pos_dev_sto,pos_std');
+fprintf("slot:%d FC1:%f sto:%d\n",cfgInfo.slot,slot_fc,slot_sto);
+fprintf("cp offset:\t");
+fprintf("\t%d",pos_sto);
 fprintf("\n");
+fprintf("orig best cp pos:\t");
+fprintf("%d\t",pos_ref);
+fprintf("\n");
+fprintf("in fact cp pos:\t\t");
+fprintf("%d\t",symb_sto_sn_abs);
+fprintf("\n");
+fprintf("FPGA FFT start pos:\t");
+fprintf("%d\t",FFTUsed_pos);
+fprintf("\n\n");
+
 
 if Debug_slotSTO_CFO_More==1
-    str=sprintf('%d ',pos_dev_sto);
+    str=sprintf('%d ',pos_sto);
     figure('NumberTitle', 'on', 'Name', "sto err:"+str);
     
     plot(pos_dev,'.');
     hold on;
     plot(pos_dev1,'r.');
-    plot(pos_dev_sto,'g.');
+    plot(pos_sto,'g.');
     
     plot(pos_dev2,'m.');
     plot(pos_ref,'c.');
