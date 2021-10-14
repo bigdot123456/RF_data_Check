@@ -75,7 +75,7 @@ tF='./20211008_ddr_data.txt'; % in shelf box,1m,1 stream
 tF='/Volumes/ORAN/L1/chendalong/1011_1848/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
 tF='/Volumes/ORAN/L1/chendalong/1012_1113/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
 
-tF='/Volumes/ORAN/L1/chendalong/1014_1056/t0_ddr_data.txt'; % in shelf box,0.1m,4 stream
+tF='/Volumes/ORAN/L1/chendalong/1014_1442/t1_ddr_data.txt'; % in shelf box,0.1m,4 stream
 
 AntNum=4;
 Debug_view=0;
@@ -112,6 +112,7 @@ coeff = phase_coeff;
 %% seperate AntData
 maxViewSlotNum=20;
 fullViewRange=(len_fft+len_scp)*(len_slot*7):(len_fft+len_scp)*(len_slot*10+8);
+%viewData=zeros(fullViewRange,4);
 
 if view_time==1
     str=sprintf('Plot All Ant full view');
@@ -120,7 +121,13 @@ if view_time==1
     
     viewData=tAntData(fullViewRange,:);
     viewDataAbs=abs(viewData);
-    plot(viewDataAbs);
+    
+    plot(viewDataAbs(:,1),'r');
+    hold;
+    plot(viewDataAbs(:,3)+100,'b');
+    plot(-viewDataAbs(:,2),'m');
+    plot(-viewDataAbs(:,4)-100,'b');
+    
     title(titlestr);grid on;
     
     tant1=tAntData(:,1);
@@ -135,8 +142,8 @@ if view_time==1
     [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,maxViewSlotNum,0);
     [slotCollectFreq3,slotUpCollectFreq3]=Process1msSignal(tant3,maxViewSlotNum,1);
     if AntNum==4
-        [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,maxViewSlotNum,0);
-        [slotCollectFreq3,slotUpCollectFreq3]=Process1msSignal(tant3,maxViewSlotNum,1);
+        [slotCollectFreq2,slotUpCollectFreq2]=Process1msSignal(tant1,maxViewSlotNum,0);
+        [slotCollectFreq4,slotUpCollectFreq4]=Process1msSignal(tant3,maxViewSlotNum,1);
     end
     if view_timesignal_upslot_freq==1
         [slotTsLen,UpSymbNum]=size(slotUpCollectFreq3);

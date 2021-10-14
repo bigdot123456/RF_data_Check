@@ -143,7 +143,7 @@ if Debug_slotSTO_CFO_More==1
     plot(pos_sto,'g.');
     
     plot(pos_dev2,'m.');
-    plot(pos_ref,'c.');
+    plot(pos_ref,'g.');
     grid on;
     str=sprintf('STO dev with ave: %d max:%d',sum(abs(pos_dev)),max(abs(pos_dev)));
     title(str)
