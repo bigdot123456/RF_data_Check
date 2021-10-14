@@ -5,7 +5,7 @@ close all;
 
 %allFolds = genpath( pwd );
 addpath('./RX_MATLAB');
-addpath('./OFDM--STO-CFO');
+addpath('./OFDM_STOCFO','./tools');
 t=now;
 datestr(t,0)
 
@@ -75,7 +75,9 @@ tF='./20211008_ddr_data.txt'; % in shelf box,1m,1 stream
 tF='/Volumes/ORAN/L1/chendalong/1011_1848/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
 tF='/Volumes/ORAN/L1/chendalong/1012_1113/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
 
+tF='/Volumes/ORAN/L1/chendalong/1014_1056/t0_ddr_data.txt'; % in shelf box,0.1m,4 stream
 
+AntNum=4;
 Debug_view=0;
 Debug_slotSTO_CFO=0;
 Debug_slotSTO_CFO_More=0;
@@ -109,15 +111,35 @@ coeff = phase_coeff;
 % title('FPGA freqency log Data,6-agc does not work');
 %% seperate AntData
 maxViewSlotNum=20;
+fullViewRange=(len_fft+len_scp)*(len_slot*7):(len_fft+len_scp)*(len_slot*10+8);
+
 if view_time==1
-    tant0=tAntData(:,1);
-    tant1=tAntData(:,3);
+    str=sprintf('Plot All Ant full view');
+    figure('NumberTitle', 'on', 'Name', str);
+    titlestr=sprintf("Timing Pan View of Ant data with %d slot",maxViewSlotNum);
+    
+    viewData=tAntData(fullViewRange,:);
+    viewDataAbs=abs(viewData);
+    plot(viewDataAbs);
+    title(titlestr);grid on;
+    
+    tant1=tAntData(:,1);
+    tant3=tAntData(:,3);
+    
+    if AntNum==4
+        tant2=tAntData(:,2);
+        tant4=tAntData(:,4);
+    end
     %plot1msSignal(tant0,0);
     %plot1msSignal(tant1,1);
-    [slotCollectFreq0,slotUpCollectFreq0]=Process1msSignal(tant0,maxViewSlotNum,0);
-    [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,maxViewSlotNum,1);
+    [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,maxViewSlotNum,0);
+    [slotCollectFreq3,slotUpCollectFreq3]=Process1msSignal(tant3,maxViewSlotNum,1);
+    if AntNum==4
+        [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,maxViewSlotNum,0);
+        [slotCollectFreq3,slotUpCollectFreq3]=Process1msSignal(tant3,maxViewSlotNum,1);
+    end
     if view_timesignal_upslot_freq==1
-        [slotTsLen,UpSymbNum]=size(slotUpCollectFreq1);
+        [slotTsLen,UpSymbNum]=size(slotUpCollectFreq3);
         UpSlotNum=UpSymbNum/len_slot;
         
         view_slot=1:UpSlotNum;
@@ -125,56 +147,61 @@ if view_time==1
         
         for i=view_slot
             fRange=(i-1)*len_slot+1:i*len_slot;
-            Ant_view0=slotUpCollectFreq0(:,fRange);
             Ant_view1=slotUpCollectFreq1(:,fRange);
-            [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation2Ant(Ant_view0,Ant_view1,i-1);
+            Ant_view3=slotUpCollectFreq3(:,fRange);
+            [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation2Ant(Ant_view1,Ant_view3,i-1);
+            if AntNum==4
+                Ant_view2=slotUpCollectFreq2(:,fRange);
+                Ant_view4=slotUpCollectFreq4(:,fRange);
+                [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation2Ant(Ant_view2,Ant_view4,i-1);
+            end
         end
     end
     %% detail signal analysis
     if view_time_detail==1
-        SymbNum=floor(length(tant0)/(4096+288));
+        SymbNum=floor(length(tant1)/(4096+288));
         str=sprintf('Plot Ant0/1 full view');
         figure('NumberTitle', 'on', 'Name', str);grid on;
         titlestr=sprintf("Timing Pan View of Ant data with %d symol",SymbNum);
-        ant_abs=[abs(tant0),abs(tant1)];
+        ant_abs=[abs(tant1),abs(tant3)];
         plot(ant_abs,'.');title(titlestr);grid on;
         dim1=[0.85 0.85 0.90 0.90];%rectangle or ellipse(x,y)
         P1=[0.7 0.45]; % 建立从(x(1), y(1))到(x(2), y(2))的线注释对象
         P2=[0.7 0.45];
         annotation('arrow',P2,P1);
-        text(61440*9,max(abs(tant0)+1),'\fontsize{15}slot9');
+        text(61440*9,max(abs(tant1)+1),'\fontsize{15}slot9');
         str=sprintf('Plot Power Ant0/1 full view');
         figure('NumberTitle', 'on', 'Name', str);grid on;
         titlestr=sprintf("Timing Pan View of Ant data Power with %d symol",SymbNum);
-        ant_abs_log=[20*log10(abs(tant0)),20*log10(abs(tant1))];
+        ant_abs_log=[20*log10(abs(tant1)),20*log10(abs(tant3))];
         plot(ant_abs_log,'.');title(titlestr);grid on;
         dim1=[0.85 0.85 0.90 0.90];%rectangle or ellipse(x,y)
         P2=[0.7 0.45];
         P1=[0.7 0.45];
         annotation('arrow',P2,P1);
         text(61440*9,max(ant_abs_log(:,1))+1,'\fontsize{15}slot9');
-        Ant_view=tant0;
+        Ant_view=tant1;
         %% split to symbol
         % symAll=splitSlot2Symbol(Ant_view);
         slotTsLen=61440;
         %% view all slot
-        totalSlotNum=ceil(length(tant0)/slotTsLen);
+        totalSlotNum=ceil(length(tant1)/slotTsLen);
         sym0=zeros(4096,totalSlotNum*14);
         sym1=zeros(4096,totalSlotNum*14);
         UpNum=0;
         for i=9:10
             %freq=plot1msBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
             tRange=(i-1)*slotTsLen+1:i*slotTsLen;
-            [~,~,~,sym0(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant0(tRange),i-1,0);
-            [~,~,~,sym1(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant1(tRange),i-1,1);
+            [~,~,~,sym0(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant1(tRange),i-1,0);
+            [~,~,~,sym1(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant3(tRange),i-1,1);
             UpNum=UpNum+1;
         end
         for i=219:totalSlotNum
             %freq=plot1msBasebandConstellation(Ant_view((i-1)*slotTsLen+1:i*slotTsLen),i-1);
             tRange=(i-1)*slotTsLen+1:i*slotTsLen;
             %[symbolPC,symbol_abs,symbol_freq,symbol_freq_abs]
-            [~,~,~,sym0(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant0(tRange),i-1,0);
-            [~,~,~,sym1(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant1(tRange),i-1,1);
+            [~,~,~,sym0(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant1(tRange),i-1,0);
+            [~,~,~,sym1(:,UpNum*14+(1:14))]=plot1SlotBasebandConstellation(tant3(tRange),i-1,1);
             UpNum=UpNum+1;
         end
         
@@ -275,20 +302,20 @@ if view_freq==1
         slotFsLen=3276*14;
         for i=9:10
             fRange=(i-1)*slotFsLen+1:i*slotFsLen;
-            Ant_view0=fant0(fRange);
-            Ant_view1=fant1(fRange);
+            Ant_view1=fant0(fRange);
+            Ant_view3=fant1(fRange);
             
-            [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation(Ant_view0,i-1,0);
-            [symbol1,symbol_abs1]=plot1SlotFreqencySignalConstellation(Ant_view1,i-1,1);
+            [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation(Ant_view1,i-1,0);
+            [symbol1,symbol_abs1]=plot1SlotFreqencySignalConstellation(Ant_view3,i-1,1);
             
         end
         for i=219:totalSlotNum
             fRange=(i-1)*slotFsLen+1:i*slotFsLen;
-            Ant_view0=fant0(fRange);
-            Ant_view1=fant1(fRange);
+            Ant_view1=fant0(fRange);
+            Ant_view3=fant1(fRange);
             
-            [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation(Ant_view0,i-1,0);
-            [symbol1,symbol_abs1]=plot1SlotFreqencySignalConstellation(Ant_view1,i-1,1);
+            [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation(Ant_view1,i-1,0);
+            [symbol1,symbol_abs1]=plot1SlotFreqencySignalConstellation(Ant_view3,i-1,1);
         end
         %% view special slot 8/9
     end
