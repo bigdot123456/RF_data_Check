@@ -108,18 +108,18 @@ Scale=max(max(symbol_abs0));
 if Scale==0
     Scale=1
 end
-
+fprintf('slot_num %d scale is %d',slot_num,Scale);
 if Debug_view_Freq==1
-    str=sprintf('Ant.0 slot %d Freqency spectrum',slot_num);
+    str=sprintf('Ant0 slot %d Freqency spectrum',slot_num);
     figure('NumberTitle', 'on', 'Name', str);
-    subplot(5,3,15);
+    subplot(3,5,15);
     plot(symbol_abs0,'.');
     str=sprintf('Ant0 s%d all symbol',slot_num);
     title(str);
     grid on;
     
     for i=1:slotSymbNum
-        subplot(5,3,i);
+        subplot(3,5,i);
         
         xy=symbol_abs0(:,i);
         len=length(xy);
@@ -143,21 +143,21 @@ if Debug_view_Freq==1
         title(str);
         %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
         grid on;
-        axis([0,len_fft,0,Scale]);
+        axis([0,len_fft,Scale-60,Scale+3]);
     end
 end
 
 if Debug_view_Freq==1
-    str=sprintf('Ant.1 slot %d Freqency spectrum',slot_num);
+    str=sprintf('Ant1 slot %d Freqency spectrum',slot_num);
     figure('NumberTitle', 'on', 'Name', str);
-    subplot(5,3,15);
+    subplot(3,5,15);
     plot(symbol_abs1,'.');
     str=sprintf('Ant1 s%d all symbol',slot_num);
     title(str);
     grid on;
     
     for i=1:slotSymbNum
-        subplot(5,3,i);
+        subplot(3,5,i);
         
         xy=symbol_abs1(:,i);
         len=length(xy);
@@ -186,7 +186,7 @@ if Debug_view_Freq==1
         title(str);
         %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
         grid on;
-        axis([0,len_fft,0,Scale]);
+       axis([0,len_fft,Scale-60,Scale+3]);
     end
 end
 %% start plot constellation

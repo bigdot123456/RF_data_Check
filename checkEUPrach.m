@@ -76,6 +76,16 @@ tF='/Volumes/ORAN/L1/chendalong/1011_1848/t1_ddr_data.txt'; % in shelf box,0.1m,
 tF='/Volumes/ORAN/L1/chendalong/1012_1113/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
 
 tF='/Volumes/ORAN/L1/chendalong/1014_1442/t1_ddr_data.txt'; % in shelf box,0.1m,4 stream
+tF='/Volumes/ORAN/L1/chendalong/1014_1505/t0_ddr_data.txt'; % in shelf box,0.1m,4 stream
+tF='/Volumes/ORAN/L1/chendalong/1014_1505/t3_ddr_data.txt'; % in shelf box,0.1m,4 ant 2 stream
+tF='/Volumes/ORAN/L1/chendalong/1014_1505/t4_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+tF='/Volumes/ORAN/L1/chendalong/1014_1505/t5_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+tF='/Volumes/ORAN/L1/chendalong/1014_1505/t6_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+tF='/Volumes/ORAN/L1/chendalong/1014_1505/t7_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+tF='/Volumes/ORAN/L1/chendalong/1016_1503/t0_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+tF='/Volumes/ORAN/1018_1422/t0_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+
+View20slot=1;
 
 AntNum=4;
 Debug_view=0;
@@ -110,7 +120,12 @@ coeff = phase_coeff;
 % grid on;
 % title('FPGA freqency log Data,6-agc does not work');
 %% seperate AntData
-maxViewSlotNum=20;
+if View20slot==1
+    maxViewSlotNum=20;
+else
+    maxViewSlotNum=floor(length(tAntData)/61440);
+end
+
 fullViewRange=(len_fft+len_scp)*(len_slot*7):(len_fft+len_scp)*(len_slot*10+8);
 %viewData=zeros(fullViewRange,4);
 
@@ -121,14 +136,42 @@ if view_time==1
     
     viewData=tAntData(fullViewRange,:);
     viewDataAbs=abs(viewData);
+    title(titlestr);
     
-    plot(viewDataAbs(:,1),'r');
-    hold;
-    plot(viewDataAbs(:,3)+100,'b');
-    plot(-viewDataAbs(:,2),'m');
-    plot(-viewDataAbs(:,4)-100,'b');
-    
-    title(titlestr);grid on;
+    if AntNum==4
+        subplot(2,2,1);
+        plot(viewDataAbs(:,2),'g');
+        hold;grid on;
+        plot(viewDataAbs(:,1)+100,'r');
+        plot(-viewDataAbs(:,2),'b');
+        title('ru0 Ant0r ru1 Ant0-b');
+        
+        subplot(2,2,2);
+        plot(viewDataAbs(:,4),'g');
+        hold;grid on;
+        plot(viewDataAbs(:,3)+100,'r');
+        plot(-viewDataAbs(:,4),'b');
+        title('ru0 Ant1r ru1 Ant1-b');
+        
+        subplot(2,2,3);
+        plot(viewDataAbs(:,1),'b');
+        hold;grid on;
+        plot(-viewDataAbs(:,3),'r');
+        title('ru0 Ant0b ru0 Ant1-r');
+        
+        subplot(2,2,4);
+        plot(viewDataAbs(:,2),'b');
+        hold;grid on;
+        plot(-viewDataAbs(:,4),'r');
+        title('ru1 Ant0b ru1 Ant1-r');
+        
+    elseif AntNum==2
+        plot(viewDataAbs(:,1),'b');
+        hold;grid on;
+        plot(-viewDataAbs(:,3),'r');
+        title('ru0 Ant0b ru0 Ant1-r');
+        
+    end
     
     tant1=tAntData(:,1);
     tant3=tAntData(:,3);
@@ -139,11 +182,11 @@ if view_time==1
     end
     %plot1msSignal(tant0,0);
     %plot1msSignal(tant1,1);
-    [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,maxViewSlotNum,0);
-    [slotCollectFreq3,slotUpCollectFreq3]=Process1msSignal(tant3,maxViewSlotNum,1);
+    [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,maxViewSlotNum,1);
+    [slotCollectFreq3,slotUpCollectFreq3]=Process1msSignal(tant3,maxViewSlotNum,3);
     if AntNum==4
-        [slotCollectFreq2,slotUpCollectFreq2]=Process1msSignal(tant1,maxViewSlotNum,0);
-        [slotCollectFreq4,slotUpCollectFreq4]=Process1msSignal(tant3,maxViewSlotNum,1);
+        [slotCollectFreq2,slotUpCollectFreq2]=Process1msSignal(tant2,maxViewSlotNum,2);
+        [slotCollectFreq4,slotUpCollectFreq4]=Process1msSignal(tant4,maxViewSlotNum,4);
     end
     if view_timesignal_upslot_freq==1
         [slotTsLen,UpSymbNum]=size(slotUpCollectFreq3);
