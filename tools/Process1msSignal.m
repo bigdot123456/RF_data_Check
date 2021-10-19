@@ -71,6 +71,7 @@ for m=1:viewSlotNum
         
     end
     
+    
 end
 
 if Debug_view==1
