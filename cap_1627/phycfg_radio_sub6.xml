@@ -1,0 +1,627 @@
+<?xml version="1.0"?>
+<!--                                                                                         -->
+<!-- INTEL CONFIDENTIAL -->
+<!-- Copyright 2009-2019 Intel Corporation All Rights Reserved. -->
+<!--  -->
+<!-- The source code contained or described herein and all documents related to the -->
+<!-- source code ("Material") are owned by Intel Corporation or its suppliers or -->
+<!-- licensors. Title to the Material remains with Intel Corporation or its -->
+<!-- suppliers and licensors. The Material may contain trade secrets and proprietary -->
+<!-- and confidential information of Intel Corporation and its suppliers and -->
+<!-- licensors, and is protected by worldwide copyright and trade secret laws and -->
+<!-- treaty provisions. No part of the Material may be used, copied, reproduced, -->
+<!-- modified, published, uploaded, posted, transmitted, distributed, or disclosed -->
+<!-- in any way without Intel's prior express written permission. -->
+<!--  -->
+<!-- No license under any patent, copyright, trade secret or other intellectual -->
+<!-- property right is granted to or conferred upon you by disclosure or delivery -->
+<!-- of the Materials, either expressly, by implication, inducement, estoppel or -->
+<!-- otherwise. Any license under such intellectual property rights must be -->
+<!-- express and approved by Intel in writing. -->
+<!--  -->
+<!-- Unless otherwise agreed by Intel in writing, you may not remove or alter this -->
+<!-- notice or any other notice embedded in Materials by Intel or Intel's suppliers -->
+<!-- or licensors in any way. -->
+<!--  -->
+<!--  version: RefPHY-prod_r19.10 -->
+<!--                                                                                         -->
+<PhyConfig>
+    <version>19.06</version>
+    <Api>
+        <!--  Maximum number of successive missing API allowed before triggering PHY stop (-1 is infinite) -->
+        <successiveNoApi>15</successiveNoApi>
+        <!--  If this is enabled (1 - WLS Interrupt mode) dedicated wls thread is created where l1 will call WLS_Wait and this thread is woken up by L2 -->
+        <!--  If this is disabled (0 - WLS Polling mode) WLS_Get is called from the timer thread (timer mode) or dpdk thread (radio mode) where L1 is polling for APIs from MAC -->
+        <wlsThreadEnable>0</wlsThreadEnable>
+        <!--  Full path to wls device used for transport of MAC-PHY API (e.g. /dev/wls0 )-->
+        <wls_dev_name>/dev/wls</wls_dev_name>
+        <!-- If this is set to 1, then WLS needs to be built with DPDK option -->
+        <wlsDpdkSupport>0</wlsDpdkSupport>
+        <!-- WLS Memory size. Default is 1GB. Leave 10MB for structure that is also shared within this 1GB -->
+        <wlsMemorySize>0x80000000</wlsMemorySize>
+    </Api>
+
+    <PhyLogs>
+        <IqLogs>
+            <dlIqLog>0</dlIqLog>
+            <ulIqLog>0</ulIqLog>
+            <!--  Write IQ Logs to File. This is a bit field where each bit has following interpretation. If bit is 1, then file is written -->
+            <!--  Bit 0: DlIfftIn.bin -->
+            <!--  Bit 1: UlFftOut.bin -->
+            <!--  Bit  2: PrachOut.bin -->
+
+            <!--  Bit 16: DlIfftIn.txt -->
+            <!--  Bit 17: UlFftOut.txt -->
+            <!--  Bit 18: PrachOut.txt -->
+            <iqLogDumpToFile>0xFFFFFFFF</iqLogDumpToFile>
+            <!--  IQ_MOD -->
+            <IqLogMod>0</IqLogMod>
+            <!--  1:enable, default 0:disable. -->
+            <IqLogStartDlSlot>0</IqLogStartDlSlot>
+            <!--  The  slot number (0 ~ 1023*10*2^¦Ì-1) when starting to log the DL iq data. -->
+            <IqLogStartUlSlot>21</IqLogStartUlSlot>
+            <!--  The slot number (0 ~ 1023*10*2^¦Ì-1) when starting to log the DL iq data. -->
+            <IqLogStartPrachSlot>0</IqLogStartPrachSlot>
+            <!--  The slot number (0 ~ 1023*10*2^¦Ì-1) when starting to log the PRACH iq data. -->
+            <IqLogSlotNum>1</IqLogSlotNum>
+            <!--  The total slot number(1~127) that will be stored into the memmory. -->
+            <iqDlLogFileMaxSize>0</iqDlLogFileMaxSize>
+            <!--  realtime logging file size, will multplex with max reserve memory -->
+            <iqUlLogFileMaxSize>0</iqUlLogFileMaxSize>
+            <!--  realtime logging file size, will multplex with max reserve memory -->
+            <iqPrachLogFileMaxSize>0</iqPrachLogFileMaxSize>
+            <!--  realtime logging file size, will multplex with max reserve memory -->
+        </IqLogs>
+        <DebugLogs>
+            <phyMlog>1</phyMlog>
+            <!--  support OAM deepsleep mode  [1 - enable sleep mode, 0 - disable sleep mode] -->
+            <phyTaskBypassMode>0<phyTaskBypassMode>
+            <phyStats>0</phyStats>
+        </DebugLogs>
+    </PhyLogs>
+
+    <Power>
+        <!-- Enable/disable power saving features [0 - disable (no power saving), 1 - enable power saving features ] -->
+        <powerSaveEnable>0</powerSaveEnable>
+    </Power>
+
+    <!-- This section is used with FerryBridge FPGA and 5GNR code -->
+    <Radio>
+        <!-- Enable/disable radio               [0 - disable (external app control radio), 1 - use Ferry Bridge, 4 - use xRAN -->
+        <radioEnable>0</radioEnable>
+        <!--  DPDK memory size allocated from hugepages [MB]  [default: 2048] -->
+        <dpdkMemorySize>6144</dpdkMemorySize>
+        <!--  DPDK Interrupt mode enable        [0 - disabled, PMD is used, 1 - enabled, uio irq is used] -->
+        <dpdkIrqMode>0</dpdkIrqMode>
+        <!--  DPDK FEC BBDEV to use             [0 - SW, 1 - FPGA] -->
+        <dpdkBasebandFecMode>0</dpdkBasebandFecMode>
+        <!--  DPDK BBDev name added to the whitelist. The argument format is <[domain:]bus:devid.func> -->
+        <dpdkBasebandDevice>0000:0e:00.0</dpdkBasebandDevice>
+        <!--  Ferry Bridge (FB) mode            [0 - LTE MODE, 1 - CPRI BYPASS MODE] -->
+        <ferryBridgeMode>1</ferryBridgeMode>
+        <!--  Number of Ethernet ports on FB    [0 - DPDK port 0, 1 - DPDK port 1, 2 - both DPDK port 0 and port 1 (CA mode with two ETH)] -->
+        <ferryBridgeEthPort>1</ferryBridgeEthPort>
+        <!--  FB Synchronized CPRI ports        [0 - no reSync REC & RE FPGA, 1 - reSync REC & REC FPGA] -->
+        <ferryBridgeSyncPorts>0</ferryBridgeSyncPorts>
+        <!--  FB Loopback Mode                  [0 - no optical loopback connected REC<->RE, 1 - optical loopback connected REC<->RE] -->
+        <ferryBridgeOptCableLoopback>0</ferryBridgeOptCableLoopback>
+        <!--  FrontHaul Frame Offset            [0x00000000 - CUCC, 0x8005A000 - CMCC] -->
+        <frameoffset>0x8005A000</frameoffset>
+        <!-- FH reset enable :[0 not reset  1 reset]-->
+        <fhFpgaResetEnable>0</fhFpgaResetEnable>
+        <!-- FH Full reset enable :[0 not reset  1 reset]-->
+        <fhFpgaFullResetEnable>0</fhFpgaFullResetEnable>
+        <!-- FEC reset enable :[0 not reset  1 reset]-->
+        <fecFpgaResetEnable>0</fecFpgaResetEnable>
+        <!-- CPRI state read enable :[0 not read  1 read]-->
+        <cpriStateEnable>0</cpriStateEnable>
+        <!--  Radio Config 0 -->
+        <RadioConfig0>
+            <!-- DPDK: Add a PCI device in white list The argument format is <[domain:]bus:devid.func> -->
+            <radioCfg0PCIeEthDev>0000:86:00.0</radioCfg0PCIeEthDev>
+            <!-- DPDK: RX Thread core id [0-max core] -->
+            <radioCfg0DpdkRx>2</radioCfg0DpdkRx>
+            <!-- DPDK: TX Thread core id [0-max core] -->
+            <radioCfg0DpdkTx>3</radioCfg0DpdkTx>
+            <!--  Number of Tx Antenna         [1, 2, 4] -->
+            <radioCfg0TxAnt>4</radioCfg0TxAnt>
+            <!--  Number of Rx Antenna         [1, 2, 4] -->
+            <radioCfg0RxAnt>4</radioCfg0RxAnt>
+            <!--  Rx AGC configuration         [0 - Rx AGC disabled, 1 - Rx AGC enabled (default for fpga release 1.3.1)] -->
+            <radioCfg0RxAgc>0</radioCfg0RxAgc>
+            <!--  Number of cells running on this port   [1 - Cell , 2 - Cells, 3 - Cells , 4 - Cells ] -->
+            <radioCfg0NumCell>1</radioCfg0NumCell>
+            <!-- First Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for first cell ] -->
+            <radioCfg0Cell0PhyId>0</radioCfg0Cell0PhyId>
+            <!-- Second Phy instance ID mapped to this port   [0-7 - valid range of PHY instance for second cell ] -->
+            <radioCfg0Cell1PhyId>1</radioCfg0Cell1PhyId>
+            <!-- Third Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for third cell ] -->
+            <radioCfg0Cell2PhyId>2</radioCfg0Cell2PhyId>
+            <!-- Forth Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for fourth cell ] -->
+            <radioCfg0Cell3PhyId>3</radioCfg0Cell3PhyId>
+            <!--  Fifth Phy instance ID mapped to this port       [0-7 - valid range of PHY instance for third cell ] -->
+            <radioCfg0Cell4PhyId>4</radioCfg0Cell4PhyId>
+            <!--  Sixth Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for fourth cell ] -->
+            <radioCfg0Cell5PhyId>5</radioCfg0Cell5PhyId>
+            <!--  Radio Over Ethernet IEEE 1914.3 -->
+            <ROE>
+                <!-- ROE: Mac address of RIU -->
+                <radioCfg0riuMac>11:22:33:44:55:66</radioCfg0riuMac>
+            </ROE>
+        </RadioConfig0>
+
+        <!--  Radio Config 1 -->
+        <RadioConfig1>
+            <!-- DPDK: Add a PCI device in white list The argument format is <[domain:]bus:devid.func> -->
+            <radioCfg1PCIeEthDev>0000:03:00.1</radioCfg1PCIeEthDev>
+            <!-- DPDK: RX Thread core id [0-max core] -->
+            <radioCfg1DpdkRx>1</radioCfg1DpdkRx>
+             <!-- DPDK: TX Thread core id [0-max core] -->
+            <radioCfg1DpdkTx>1</radioCfg1DpdkTx>
+            <!--  Number of Tx Antenna         [1, 2, 4] -->
+            <radioCfg1TxAnt>4</radioCfg1TxAnt>
+            <!--  Number of Rx Antenna         [1, 2, 4] -->
+            <radioCfg1RxAnt>4</radioCfg1RxAnt>
+            <!--  Rx AGC configuration         [0 - Rx AGC disabled, 1 - Rx AGC enabled (default for fpga release 1.3.1)] -->
+            <radioCfg1RxAgc>0</radioCfg1RxAgc>
+            <!--  Number of cells running on this port   [1 - Cell , 2 - Cells ] -->
+            <radioCfg1NumCell>2</radioCfg1NumCell>
+            <!-- First Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for first cell ] -->
+            <radioCfg1Cell0PhyId>2</radioCfg1Cell0PhyId>
+            <!-- Second Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for second cell ] -->
+            <radioCfg1Cell1PhyId>3</radioCfg1Cell1PhyId>
+            <!-- Third Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for third cell ] -->
+            <radioCfg1Cell2PhyId>2</radioCfg1Cell2PhyId>
+            <!-- Forth Fourth instance ID mapped to this port    [0-7 - valid range of PHY instance for fourth cell ] -->
+            <radioCfg1Cell3PhyId>3</radioCfg1Cell3PhyId>
+            <!--  Radio Over Ethernet IEEE 1914.3 -->
+            <ROE>
+                <!-- ROE: Mac address of RIU -->
+                <radioCfg1riuMac>ac:1f:6b:2c:9f:07</radioCfg1riuMac>
+            </ROE>
+        </RadioConfig1>
+
+        <!--  Radio Config 2 -->
+        <RadioConfig2>
+            <!-- DPDK: Add a PCI device in white list The argument format is <[domain:]bus:devid.func> -->
+            <radioCfg2PCIeEthDev>0000:05:00.0</radioCfg2PCIeEthDev>
+            <!-- DPDK: RX Thread core id [0-max core] -->
+            <radioCfg2DpdkRx>10</radioCfg2DpdkRx>
+             <!-- DPDK: TX Thread core id [0-max core] -->
+            <radioCfg2DpdkTx>11</radioCfg2DpdkTx>
+            <!--  Number of Tx Antenna         [1, 2, 4] -->
+            <radioCfg2TxAnt>4</radioCfg2TxAnt>
+            <!--  Number of Rx Antenna         [1, 2, 4] -->
+            <radioCfg2RxAnt>4</radioCfg2RxAnt>
+            <!--  Rx AGC configuration         [0 - Rx AGC disabled, 1 - Rx AGC enabled (default for fpga release 1.3.1)] -->
+            <radioCfg2RxAgc>0</radioCfg2RxAgc>
+            <!--  Number of cells running on this port   [1 - Cell , 2 - Cells ] -->
+            <radioCfg2NumCell>2</radioCfg2NumCell>
+            <!-- First Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for first cell ] -->
+            <radioCfg2Cell0PhyId>4</radioCfg2Cell0PhyId>
+            <!-- Second Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for second cell ] -->
+            <radioCfg2Cell1PhyId>5</radioCfg2Cell1PhyId>
+            <!-- Third Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for third cell ] -->
+            <radioCfg2Cell2PhyId>2</radioCfg2Cell2PhyId>
+            <!-- Forth Fourth instance ID mapped to this port    [0-7 - valid range of PHY instance for fourth cell ] -->
+            <radioCfg2Cell3PhyId>3</radioCfg2Cell3PhyId>
+            <!--  Radio Over Ethernet IEEE 1914.3 -->
+            <ROE>
+                <!-- ROE: Mac address of RIU -->
+                <radioCfg2riuMac>ac:1f:6b:2c:9f:07</radioCfg2riuMac>
+            </ROE>
+        </RadioConfig2>
+
+        <!--  Radio Config 3 -->
+        <RadioConfig3>
+            <!-- DPDK: Add a PCI device in white list The argument format is <[domain:]bus:devid.func> -->
+            <radioCfg3PCIeEthDev>0000:05:00.1</radioCfg3PCIeEthDev>
+            <!-- DPDK: RX Thread core id [0-max core] -->
+            <radioCfg3DpdkRx>12</radioCfg3DpdkRx>
+             <!-- DPDK: TX Thread core id [0-max core] -->
+            <radioCfg3DpdkTx>13</radioCfg3DpdkTx>
+            <!--  Number of Tx Antenna         [1, 2, 4] -->
+            <radioCfg3TxAnt>4</radioCfg3TxAnt>
+            <!--  Number of Rx Antenna         [1, 2, 4] -->
+            <radioCfg3RxAnt>4</radioCfg3RxAnt>
+            <!--  Rx AGC configuration         [0 - Rx AGC disabled, 1 - Rx AGC enabled (default for fpga release 1.3.1)] -->
+            <radioCfg3RxAgc>0</radioCfg3RxAgc>
+            <!--  Number of cells running on this port   [1 - Cell , 2 - Cells ] -->
+            <radioCfg3NumCell>2</radioCfg3NumCell>
+            <!-- First Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for first cell ] -->
+            <radioCfg3Cell0PhyId>6</radioCfg3Cell0PhyId>
+            <!-- Second Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for second cell ] -->
+            <radioCfg3Cell1PhyId>7</radioCfg3Cell1PhyId>
+            <!-- Third Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for third cell ] -->
+            <radioCfg3Cell2PhyId>2</radioCfg3Cell2PhyId>
+            <!-- Forth Fourth instance ID mapped to this port    [0-7 - valid range of PHY instance for fourth cell ] -->
+            <radioCfg3Cell3PhyId>3</radioCfg3Cell3PhyId>
+            <!--  Radio Over Ethernet IEEE 1914.3 -->
+            <ROE>
+                <!-- ROE: Mac address of RIU -->
+                <radioCfg3riuMac>ac:1f:6b:2c:9f:07</radioCfg3riuMac>
+            </ROE>
+        </RadioConfig3>
+
+        <!--  Radio Config 4 -->
+        <RadioConfig4>
+            <!-- DPDK: Add a PCI device in white list The argument format is <[domain:]bus:devid.func> -->
+            <radioCfg4PCIeEthDev>0000:00:08.0</radioCfg4PCIeEthDev>
+            <!-- DPDK: RX Thread core id [0-max core] -->
+            <radioCfg4DpdkRx>14</radioCfg4DpdkRx>
+             <!-- DPDK: TX Thread core id [0-max core] -->
+            <radioCfg4DpdkTx>15</radioCfg4DpdkTx>
+            <!--  Number of Tx Antenna         [1, 2, 4] -->
+            <radioCfg4TxAnt>4</radioCfg4TxAnt>
+            <!--  Number of Rx Antenna         [1, 2, 4] -->
+            <radioCfg4RxAnt>4</radioCfg4RxAnt>
+            <!--  Rx AGC configuration         [0 - Rx AGC disabled, 1 - Rx AGC enabled (default for fpga release 1.3.1)] -->
+            <radioCfg4RxAgc>0</radioCfg4RxAgc>
+            <!--  Number of cells running on this port   [1 - Cell , 2 - Cells ] -->
+            <radioCfg4NumCell>2</radioCfg4NumCell>
+            <!-- First Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for first cell ] -->
+            <radioCfg4Cell0PhyId>8</radioCfg4Cell0PhyId>
+            <!-- Second Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for second cell ] -->
+            <radioCfg4Cell1PhyId>9</radioCfg4Cell1PhyId>
+            <!-- Third Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for third cell ] -->
+            <radioCfg4Cell2PhyId>2</radioCfg4Cell2PhyId>
+            <!-- Forth Fourth instance ID mapped to this port    [0-7 - valid range of PHY instance for fourth cell ] -->
+            <radioCfg4Cell3PhyId>3</radioCfg4Cell3PhyId>
+            <!--  Radio Over Ethernet IEEE 1914.3 -->
+            <ROE>
+                <!-- ROE: Mac address of RIU -->
+                <radioCfg4riuMac>ac:1f:6b:2c:9f:07</radioCfg4riuMac>
+            </ROE>
+        </RadioConfig4>
+
+        <!--  Radio Config 5 -->
+        <RadioConfig5>
+            <!-- DPDK: Add a PCI device in white list The argument format is <[domain:]bus:devid.func> -->
+            <radioCfg5PCIeEthDev>0000:08:00.0</radioCfg5PCIeEthDev>
+            <!-- DPDK: RX Thread core id [0-max core] -->
+            <radioCfg5DpdkRx>16</radioCfg5DpdkRx>
+            <!-- DPDK: TX Thread core id [0-max core] -->
+            <radioCfg5DpdkTx>16</radioCfg5DpdkTx>
+            <!--  Number of Tx Antenna         [1, 2, 4] -->
+            <radioCfg5TxAnt>4</radioCfg5TxAnt>
+            <!--  Number of Rx Antenna         [1, 2, 4] -->
+            <radioCfg5RxAnt>4</radioCfg5RxAnt>
+            <!--  Rx AGC configuration         [0 - Rx AGC disabled, 1 - Rx AGC enabled (default for fpga release 1.3.1)] -->
+            <radioCfg5RxAgc>0</radioCfg5RxAgc>
+            <!--  Number of cells running on this port   [1 - Cell , 2 - Cells ] -->
+            <radioCfg5NumCell>2</radioCfg5NumCell>
+            <!-- First Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for first cell ] -->
+            <radioCfg5Cell0PhyId>10</radioCfg5Cell0PhyId>
+            <!-- Second Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for second cell ] -->
+            <radioCfg5Cell1PhyId>11</radioCfg5Cell1PhyId>
+            <!-- Third Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for third cell ] -->
+            <radioCfg5Cell2PhyId>2</radioCfg5Cell2PhyId>
+            <!-- Forth Fourth instance ID mapped to this port    [0-7 - valid range of PHY instance for fourth cell ] -->
+            <radioCfg5Cell3PhyId>3</radioCfg5Cell3PhyId>
+            <!--  Radio Over Ethernet IEEE 1914.3 -->
+            <ROE>
+                <!-- ROE: Mac address of RIU -->
+                <radioCfg5riuMac>ac:1f:6b:2c:9f:07</radioCfg5riuMac>
+            </ROE>
+        </RadioConfig5>
+
+        <!--  Radio Config 6 -->
+        <RadioConfig6>
+            <!-- DPDK: Add a PCI device in white list The argument format is <[domain:]bus:devid.func> -->
+            <radioCfg6PCIeEthDev>0000:00:05.0</radioCfg6PCIeEthDev>
+            <!-- DPDK: RX Thread core id [0-max core] -->
+            <radioCfg6DpdkRx>16</radioCfg6DpdkRx>
+             <!-- DPDK: TX Thread core id [0-max core] -->
+            <radioCfg6DpdkTx>16</radioCfg6DpdkTx>
+            <!--  Number of Tx Antenna         [1, 2, 4] -->
+            <radioCfg6TxAnt>4</radioCfg6TxAnt>
+            <!--  Number of Rx Antenna         [1, 2, 4] -->
+            <radioCfg6RxAnt>4</radioCfg6RxAnt>
+            <!--  Rx AGC configuration         [0 - Rx AGC disabled, 1 - Rx AGC enabled (default for fpga release 1.3.1)] -->
+            <radioCfg1RxAgc>0</radioCfg1RxAgc>
+            <!--  Number of cells running on this port   [1 - Cell , 2 - Cells ] -->
+            <radioCfg6NumCell>2</radioCfg6NumCell>
+            <!-- First Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for first cell ] -->
+            <radioCfg6Cell0PhyId>12</radioCfg6Cell0PhyId>
+            <!-- Second Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for second cell ] -->
+            <radioCfg6Cell1PhyId>13</radioCfg6Cell1PhyId>
+            <!-- Third Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for third cell ] -->
+            <radioCfg6Cell2PhyId>2</radioCfg6Cell2PhyId>
+            <!-- Forth Fourth instance ID mapped to this port    [0-7 - valid range of PHY instance for fourth cell ] -->
+            <radioCfg6Cell3PhyId>3</radioCfg6Cell3PhyId>
+            <!--  Radio Over Ethernet IEEE 1914.3 -->
+            <ROE>
+                <!-- ROE: Mac address of RIU -->
+                <radioCfg6riuMac>ac:1f:6b:2c:9f:07</radioCfg6riuMac>
+            </ROE>
+        </RadioConfig6>
+
+        <!--  Radio Config 7 -->
+        <RadioConfig7>
+            <!-- DPDK: Add a PCI device in white list The argument format is <[domain:]bus:devid.func> -->
+            <radioCfg7PCIeEthDev>0000:00:06.0</radioCfg7PCIeEthDev>
+            <!-- DPDK: RX Thread core id [0-max core] -->
+            <radioCfg7DpdkRx>16</radioCfg7DpdkRx>
+             <!-- DPDK: TX Thread core id [0-max core] -->
+            <radioCfg7DpdkTx>16</radioCfg7DpdkTx>
+            <!--  Number of Tx Antenna         [1, 2, 4] -->
+            <radioCfg7TxAnt>4</radioCfg7TxAnt>
+            <!--  Number of Rx Antenna         [1, 2, 4] -->
+            <radioCfg7RxAnt>4</radioCfg7RxAnt>
+            <!--  Rx AGC configuration         [0 - Rx AGC disabled, 1 - Rx AGC enabled (default for fpga release 1.3.1)] -->
+            <radioCfg7RxAgc>0</radioCfg7RxAgc>
+            <!--  Number of cells running on this port   [1 - Cell , 2 - Cells ] -->
+            <radioCfg7NumCell>2</radioCfg7NumCell>
+            <!-- First Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for first cell ] -->
+            <radioCfg7Cell0PhyId>14</radioCfg7Cell0PhyId>
+            <!-- Second Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for second cell ] -->
+            <radioCfg7Cell1PhyId>15</radioCfg7Cell1PhyId>
+            <!-- Third Phy instance ID mapped to this port    [0-7 - valid range of PHY instance for third cell ] -->
+            <radioCfg7Cell2PhyId>2</radioCfg7Cell2PhyId>
+            <!-- Forth Fourth instance ID mapped to this port    [0-7 - valid range of PHY instance for fourth cell ] -->
+            <radioCfg7Cell3PhyId>3</radioCfg7Cell3PhyId>
+            <!--  Radio Over Ethernet IEEE 1914.3 -->
+            <ROE>
+                <!-- ROE: Mac address of RIU -->
+                <radioCfg7riuMac>ac:1f:6b:2c:9f:07</radioCfg7riuMac>
+            </ROE>
+        </RadioConfig7>
+
+        <!-- Select Radio Config Option (from above) for Port 0 [0: RadioConfig0, 1: RadioConfig1 ... 7: RadioConfig7] -->
+        <radioPort0>0</radioPort0>
+
+        <!-- Select Radio Config Option (from above) for Port 1 [0: RadioConfig0, 1: RadioConfig1 ... 7: RadioConfig7] -->
+        <radioPort1>1</radioPort1>
+
+        <!-- Select Radio Config Option (from above) for Port 2 [0: RadioConfig0, 1: RadioConfig1 ... 7: RadioConfig7] -->
+        <radioPort2>2</radioPort2>
+
+        <!-- Select Radio Config Option (from above) for Port 3 [0: RadioConfig0, 1: RadioConfig1 ... 7: RadioConfig7] -->
+        <radioPort3>3</radioPort3>
+
+        <!-- Select Radio Config Option (from above) for Port 4 [0: RadioConfig0, 1: RadioConfig1 ... 7: RadioConfig7] -->
+        <radioPort4>4</radioPort4>
+
+        <!-- Select Radio Config Option (from above) for Port 5 [0: RadioConfig0, 1: RadioConfig1 ... 7: RadioConfig7] -->
+        <radioPort5>5</radioPort5>
+
+        <!-- Select Radio Config Option (from above) for Port 6 [0: RadioConfig0, 1: RadioConfig1 ... 7: RadioConfig7] -->
+        <radioPort6>6</radioPort6>
+
+        <!-- Select Radio Config Option (from above) for Port 7 [0: RadioConfig0, 1: RadioConfig1 ... 7: RadioConfig7] -->
+        <radioPort7>7</radioPort7>
+    </Radio>
+
+    <PhyVars>
+        <!-- The below variables can be modified in file here and it will take effect when PHY is brought up after reboot of system -->
+        <Pdsch>
+        </Pdsch>
+        <Pusch>
+            <!-- Split processing for Channel Estimation for PUSCH -->
+            <ChanEstSplit>0</ChanEstSplit>
+
+            <!-- Split processing for MMSE for PUSCH -->
+            <MmseSplit>0</MmseSplit>
+
+            <!-- Software FEC Decoder Early Termination disabled. If 1, then programmed number of iterations are run from MAC PHY API regardless of CRC PASS -->
+            <fecDecEarlyTermDisable>0</fecDecEarlyTermDisable>
+
+            <!-- FEC LDPC Decoder Number of iterations. If 0 then Number of iterations is set to 10. Else this value is used -->
+            <fecDecNumIter>12</fecDecNumIter>
+
+            <!-- Number of decimal digits of LLR fixed point output. If 0 then this value is set to 2, which means LLR is 8S2. Else this value is used -->
+            <llrOutDecimalDigit>2</llrOutDecimalDigit>
+
+            <!-- 0 1 -->
+            <PuschInterFaceVer>1</PuschInterFaceVer>
+
+            <!-- 0:Don't meas noise, 1:Meas noise -->
+            <phyMeasNoiseFlag>0</phyMeasNoiseFlag>
+            <!-- Symble of meas noise -->
+            <phyMeasNoiseSymble>7</phyMeasNoiseSymble>
+            <!-- Noise report count -->
+            <phyMeasNoiseRptCnt>72000</phyMeasNoiseRptCnt>
+            <!-- Noise report RRU Idx -->
+            <phyMeasNoiseRptRRUIdx>0</phyMeasNoiseRptRRUIdx>
+            <!-- Noise meas offset,values from -32 to 32 -->
+            <phyMeasNoiseOffset>0</phyMeasNoiseOffset>
+        </Pusch>
+        <Pucch>
+            <!-- Split processing for PUCCH -->
+            <PucchSplit>0</PucchSplit>
+            <!-- for PUCCH f0 hard ack -->
+            <pucchFormat0Hark>0</pucchFormat0Hark>
+            <!-- for PUCCH f2 dtx check -->
+            <pucchFormat2DtxEnable>1</pucchFormat2DtxEnable>
+            <!-- for PUCCH f2 power adj -->
+            <pucchFormat2DynamicAdjEnable>0</pucchFormat2DynamicAdjEnable>
+            <!-- 0 1 -->
+            <PucchInterFaceVer>0</PucchInterFaceVer>
+        </Pucch>
+        <Prach>
+            <!-- Prach Detection Threshold. This is a Multiplier on top of what L1 finds as thershold. Needs to be >=1 -->
+            <prachDetectThreshold>100</prachDetectThreshold>
+			<!-- Prach Repeation Config,value:1,2,4,6,12. Choose smaller value between prachRepeationConfig and protocol value -->
+			<prachRepeationConfig>12</prachRepeationConfig>
+        </Prach>
+        <SRS>
+            <!-- NoiseWindPosition,x/12 -->
+            <NoiseWindPosition>7</NoiseWindPosition>
+            <!-- SRS Algorithm Selection,0:general precision algorithm,1:high precision algorithm -->
+            <SrsAlgorithm>0</SrsAlgorithm>
+            <!-- SRS Snr Threshold,DB -->
+            <SrsSnrThreshold>15</SrsSnrThreshold>
+            <!-- SRS valid TA Threshold,liner -->
+            <SrsTAThreshold>10</SrsTAThreshold>
+            <!-- SvdParticleSize -->
+            <SvdParticleSize>16</SvdParticleSize>
+            <!-- singular_value ratio -->
+            <Singular_ratio1>1000</Singular_ratio1>
+            <Singular_ratio2>100</Singular_ratio2>
+            <Singular_ratio3>100</Singular_ratio3>
+            <Singular_ratio4>0</Singular_ratio4>
+        </SRS>
+
+    </PhyVars>
+
+    <MlogVars>
+        <!-- Number of subframes are logged into Mlog. Needs to be a power of 2 -->
+        <MlogSubframes>128</MlogSubframes>
+        <!-- Number of Cores being logged into Mlog -->
+        <MlogCores>20</MlogCores>
+        <!-- Size of each subframe (in bytes) -->
+        <MlogSize>20480</MlogSize>
+    </MlogVars>
+
+    <PhylogCtl>
+        <!--prints level of phylog, (0-non, 1-critical, 2-error, 3-warnning, 4-info(default), 5-debug)-->
+        <phylogLvl>4</phylogLvl>
+        <!--Module mask of phy log -->
+        <phyModuleMask>0x0000</phyModuleMask>
+        <!--0 will start a thread, wirte log to disk file(phyFastFlog.txt); 1 not start thread and wirte to shared memory, get log (phyFastFlogSHM.txt) when exit -->
+        <phylogSHMEnable>0</phylogSHMEnable>
+        <!--200MB, when phylogSHMEnable is 1, will write log to this memory-->
+        <phylogSHMBufSize>200</phylogSHMBufSize>
+        <!-- Wireless Subsystem Thread: Core, priority, Policy [0: SCHED_FIFO 1: SCHED_RR]. Only created when wlsThreadEnable = 1 -->
+        <phylogthread>1, 96, 0</phylogthread>
+   </PhylogCtl>
+
+
+    <!-- CPU Binding to Application Threads -->
+    <Threads>
+        <!-- Wireless Subsystem Thread: Core, priority, Policy [0: SCHED_FIFO 1: SCHED_RR]. Only created when wlsThreadEnable = 1 -->
+        <wlsRxThread>1, 96, 0</wlsRxThread>
+
+        <!-- Wireless Subsystem Worker Thread: Core, priority, Policy [0: SCHED_FIFO 1: SCHED_RR]. Only created when wlsThreadEnable = 1  -->
+        <wlsWorkerThread>1, 96, 0</wlsWorkerThread>
+
+        <!-- System Threads: Core, priority, Policy [0: SCHED_FIFO 1: SCHED_RR] -->
+        <systemThread>0, 0, 0</systemThread>
+
+        <!-- Timer Thread: Core, priority, Policy [0: SCHED_FIFO 1: SCHED_RR] -->
+        <timerThread>0, 96, 0</timerThread>
+
+        <!-- FPGA for LDPC Thread: Core, priority, Policy [0: SCHED_FIFO 1: SCHED_RR] -->
+        <FpgaDriverCpuInfo>8, 96, 0</FpgaDriverCpuInfo>
+
+        <!-- FPGA for Front Haul (FFT / IFFT) Thread: Core, priority, Policy [0: SCHED_FIFO 1: SCHED_RR] -->
+        <FrontHaulCpuInfo>10, 96, 0</FrontHaulCpuInfo>
+
+        <!-- DPDK Radio Master Thread: Core, priority, Policy [0: SCHED_FIFO 1: SCHED_RR] -->
+        <radioDpdkMaster>18, 99, 0</radioDpdkMaster>
+        <!-- OAM thread: Core, priority, Policy -->
+        <msgThread>1, 96, 0</msgThread>
+    </Threads>
+
+    <BbuPoolConfig>
+        <!-- If set to 1, BBU Pool cores, return control to kernel after task is completed. Else it will always be in user space without going to sleep -->
+        <!-- It is mainly used when setting core to harware sleep mode and latency of sleep is not very deterministic -->
+        <BbuPoolSleepEnable>0</BbuPoolSleepEnable>
+
+        <!-- If BbuPoolConfigEnable is set to 0, then this is used. Frame Work Cores (Bit mask of all cores that are used for BBU Pool in decimal), priority, Policy [0: SCHED_FIFO 1: SCHED_RR] -->
+        <BbuPoolThreadDefault_0_63>0x55010, 94, 0</BbuPoolThreadDefault_0_63>
+        <BbuPoolThreadDefault_64_127>0, 94, 0</BbuPoolThreadDefault_64_127>
+    </BbuPoolConfig>
+
+    <Fpga>
+        <!-- Time advance added in FPGA from PPS. This is to sync with RRU -->
+        <!-- With EU:24950  NO EU:16450 -->
+        <FrontHaulTimeAdvance>24950</FrontHaulTimeAdvance>
+
+        <!-- DMA Type. InitiativeDMA:1 DMA:0 -->
+        <DMACfg>0</DMACfg>
+        <!-- Number of ports used from FPGA. 4Ports: 462607 (0x70F0F) 2Ports: 459523 (0x70303)  1Cell: 66307 (0x10303)-->
+        <nEthPorts>66307</nEthPorts>
+        <!-- cpri_select_nr reg config value. Default: 0x00007654 -->
+        <CPRISelectNRCfg>0x7654</CPRISelectNRCfg>
+        <!-- cpri_select_lte reg config value. Default: 0x00007654 -->
+        <CPRISelectLTECfg>0x7654</CPRISelectLTECfg>
+        <!-- Number of Cell for each Channel.. 2Cell for 1 Channel: 0x01 1Cell for 1 Chennel: 0x0 -->
+        <NumCellOfChannelCfg>0</NumCellOfChannelCfg>
+        <!-- Number of antennas and ports for each cell. 2T2R: 1cell:0x12 2cell:0x1212 4cell:0x12121212-->
+        <CellAntCfg>0x12</CellAntCfg>
+        <!-- phase compensation enable flag 0:disablle 1:enable -->
+        <nPhaseCompFlag>0</nPhaseCompFlag>
+
+        <!-- FH switch mode  default:0x00003210 -->
+        <nFhSwitchMode>0x00003210</nFhSwitchMode>
+
+        <!-- FH PrachFormat  format0:0x00000000 B4:0x00000280-->
+        <nFhPrachFormat>0x00000280</nFhPrachFormat>
+
+        <!-- Version Numbers on FPGA tested with each release -->
+        <!-- FEC Version for mmWave -->
+        <nFecFpgaVersionMu3>0xFC060601</nFecFpgaVersionMu3>
+
+        <!-- FEC Version for sub3 and sub6 -->
+        <nFecFpgaVersionMu0_1>0x1018d400</nFecFpgaVersionMu0_1>
+
+        <!-- Front Haul Version for mmWave -->
+        <nFhFpgaVersionMu3>0x8001000F</nFhFpgaVersionMu3>
+
+        <!-- Front Haul Version for sub3 and sub6 -->
+        <nFhFpgaVersionMu0_1>0x90010008</nFhFpgaVersionMu0_1>
+    </Fpga>
+
+    <xRAN>
+        <!--  DPDK NIC card VF for C-plane   added to the whitelist. The argument format is <[domain:]bus:devid.func> -->
+        <dpdkXranDeviceCP>0000:d8:02.1</dpdkXranDeviceCP>
+        <!--  DPDK NIC card VF for C-plane   added to the whitelist. The argument format is <[domain:]bus:devid.func> -->
+        <dpdkXranDeviceUP>0000:d8:02.0</dpdkXranDeviceUP>
+        <!-- XRAN: Mac address of lls-CU -->
+        <llsCuMac>00:11:22:33:44:66</llsCuMac>
+        <!-- XRAN: Mac address of RU -->
+        <RuMac>00:11:22:33:44:55</RuMac>
+
+        <!-- RU Settings -->
+        <Tadv_cp_dl>25</Tadv_cp_dl>
+        <!-- Reception Window C-plane DL-->
+        <T2a_min_cp_dl>50</T2a_min_cp_dl>
+        <T2a_max_cp_dl>140</T2a_max_cp_dl>
+        <!-- Reception Window C-plane UL-->
+        <T2a_min_cp_ul>50</T2a_min_cp_ul>
+        <T2a_max_cp_ul>140</T2a_max_cp_ul>
+        <!-- Reception Window U-plane -->
+        <T2a_min_up>25</T2a_min_up>
+        <T2a_max_up>140</T2a_max_up>
+        <!-- Transmission Window U-plane -->
+        <Ta3_min>20</Ta3_min>
+        <Ta3_max>32</Ta3_max>
+
+        <!-- lls-CU Settings -->
+        <!-- VLAN Tag used for C-Plane -->
+        <c_plane_vlan_tag>1</c_plane_vlan_tag>
+        <u_plane_vlan_tag>2</u_plane_vlan_tag>
+
+        <!-- Transmission Window Fast C-plane DL -->
+        <T1a_min_cp_dl>70</T1a_min_cp_dl>
+        <T1a_max_cp_dl>100</T1a_max_cp_dl>
+        <!-- Transmission Window Fast C-plane UL -->
+        <T1a_min_cp_ul>80</T1a_min_cp_ul>
+        <T1a_max_cp_ul>90</T1a_max_cp_ul>
+        <!-- Transmission Window U-plane -->
+        <T1a_min_up>35</T1a_min_up>
+        <T1a_max_up>50</T1a_max_up>
+        <!-- Reception Window U-Plane-->
+        <Ta4_min>0</Ta4_min>
+        <Ta4_max>45</Ta4_max>
+    </xRAN>
+
+    <TestUeMode>
+        <!-- This field signifies if TestUE mode is enabled or not. If enabled, L1 IQ samples will be transmitted over ethernet from testue App -->
+        <TestUeModeEnable>0</TestUeModeEnable>
+
+        <!-- Timer-mode DPDK IO options. -->
+        <DpdkIo>
+            <!-- DPDK IO thread: Core, priority, Policy [0: SCHED_FIFO 1: SCHED_RR] -->
+            <dpdkIoThread>0, 90, 0</dpdkIoThread>
+
+            <dpdkPort>0</dpdkPort>
+
+            <!-- DPDK: Add a PCI device in white list The argument format is <[domain:]bus:devid.func> -->
+            <dpdkDev>0000:00:00.0</dpdkDev>
+        </DpdkIo>
+    </TestUeMode>
+
+</PhyConfig>
+

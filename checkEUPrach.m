@@ -5,7 +5,7 @@ close all;
 
 %allFolds = genpath( pwd );
 addpath('./RX_MATLAB');
-addpath('./OFDM_STOCFO','./tools');
+addpath('./OFDM_STOCFO','./tools','nr_codec','nr_phy');
 t=now;
 datestr(t,0)
 
@@ -69,21 +69,26 @@ tF='/mnt/oran/L1/chendalong/0928_0959/t0_ddr_data.txt'; % in shelf box,5m
 tF='~/Downloads/t1_ddr_data.txt'; % in shelf box,10m,bin format，2 stream
 %tF='~/Downloads/t5_ddr_data.txt'; % in shelf box,10m,bin format,1 stream
 fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
-tF='/Volumes/ORAN/L1/chendalong/1005_1551/t4_ddr_data.txt'; % in shelf box,1m,1 stream
-tF='./20211008_ddr_data.txt'; % in shelf box,1m,1 stream
-%tF='./File.iq/File_2021-10-08090021.complex.1ch.float32'
-tF='/Volumes/ORAN/L1/chendalong/1011_1848/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
-tF='/Volumes/ORAN/L1/chendalong/1012_1113/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
-
-tF='/Volumes/ORAN/L1/chendalong/1014_1442/t1_ddr_data.txt'; % in shelf box,0.1m,4 stream
-tF='/Volumes/ORAN/L1/chendalong/1014_1505/t0_ddr_data.txt'; % in shelf box,0.1m,4 stream
-tF='/Volumes/ORAN/L1/chendalong/1014_1505/t3_ddr_data.txt'; % in shelf box,0.1m,4 ant 2 stream
-tF='/Volumes/ORAN/L1/chendalong/1014_1505/t4_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
-tF='/Volumes/ORAN/L1/chendalong/1014_1505/t5_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
-tF='/Volumes/ORAN/L1/chendalong/1014_1505/t6_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
-tF='/Volumes/ORAN/L1/chendalong/1014_1505/t7_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
-tF='/Volumes/ORAN/L1/chendalong/1016_1503/t0_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
-tF='/Volumes/ORAN/1018_1422/t0_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+% tF='/Volumes/ORAN/L1/chendalong/1005_1551/t4_ddr_data.txt'; % in shelf box,1m,1 stream
+% tF='./20211008_ddr_data.txt'; % in shelf box,1m,1 stream
+% %tF='./File.iq/File_2021-10-08090021.complex.1ch.float32'
+% tF='/Volumes/ORAN/L1/chendalong/1011_1848/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
+% tF='/Volumes/ORAN/L1/chendalong/1012_1113/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
+% 
+% tF='/Volumes/ORAN/L1/chendalong/1014_1442/t1_ddr_data.txt'; % in shelf box,0.1m,4 stream
+% tF='/Volumes/ORAN/L1/chendalong/1014_1505/t0_ddr_data.txt'; % in shelf box,0.1m,4 stream
+% tF='/Volumes/ORAN/L1/chendalong/1014_1505/t3_ddr_data.txt'; % in shelf box,0.1m,4 ant 2 stream
+% tF='/Volumes/ORAN/L1/chendalong/1014_1505/t4_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+% tF='/Volumes/ORAN/L1/chendalong/1014_1505/t5_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+% tF='/Volumes/ORAN/L1/chendalong/1014_1505/t6_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+% tF='/Volumes/ORAN/L1/chendalong/1014_1505/t7_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+% tF='/Volumes/ORAN/L1/chendalong/1016_1503/t0_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+% tF='/Volumes/ORAN/1018_1422/t0_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+tF='/Volumes/ORAN/1018_1422/t1_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+% tF='/Volumes/ORAN/1018_1422/t2_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+% tF='/Volumes/ORAN/1018_1422/t3_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+% tF='/Volumes/ORAN/1018_1422/t4_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+% tF='/Volumes/ORAN/1018_1422/t5_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
 
 View20slot=1;
 
