@@ -1,4 +1,4 @@
-function [slotCollectFreq,slotUpCollectFreq]=Process1msSignalWithDMRS(Ant_view,viewNum,ant_num)
+function [slotCollectFreq,slotUpCollectFreq]=Process1msSignalWithDMRS(Ant_view,viewNum,cfgInfo)
 %% process 1ms signal with STO & CFO
 % [slotCollectFreq,slotUp]=Process1msSignal(Ant_view,viewNum,ant_num)
 % ant_num is used to figure view
@@ -7,22 +7,26 @@ global Debug_view Ant_debug Debug_slotSTO_CFO Debug_slotSTO_CFO_More
 %global Debug_sto;
 
 if nargin==0
-    ant_num=0;
+    cfgInfo.slot=0;
+    cfgInfo.ant=0;
     viewNum=400;
     load './Ant_view.mat'
 elseif nargin==1
     viewNum=400;
-    ant_num=0;
+    cfgInfo.slot=0;
+    cfgInfo.ant=0;
 elseif nargin==2
-    ant_num=0;
+    cfgInfo.slot=0;
+    cfgInfo.ant=0;
 end
+
+ant_num=cfgInfo.ant;
 
 if Ant_debug==1
     save 'Ant_view.mat'
 end
 
-cfgInfo.slot=0;
-cfgInfo.ant=ant_num;
+
 %% basic parameter
 MIN=+30;
 
@@ -40,39 +44,8 @@ slotUpCollectFreq=zeros(len_fft,ceil(slotNum/10*2)*symNum);
 viewSlotNum=min(slotNum,viewNum);
 upSlot=[9,10,19,0];
 
-for m=1:viewSlotNum
-    slotFFTIn=splitSlot2Symbol(slotCollect(:,m));
-    
-    slotCollectTime(:,(m-1)*symNum+1:m*symNum)=slotFFTIn;
-    for n=1:symNum
-        slotFFTout=fft(slotFFTIn(:,n));
-        slotFFTout1=fftshift(slotFFTout);
-        slotCollectFreq(:,(m-1)*symNum+n)=slotFFTout1;
-    end
-    
-    cfgInfo.slot=m-1;
-    m1=mod(m,20);
-    if ismember(m1,upSlot)
-        posUp=(upcnt-1)*symNum+1:upcnt*symNum;
-        
-        if m==slotNum
-            %  [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(SlotIn,lastSlotIn,nextSlotIn,OFDMParam)
-            [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(slotCollect(:,m),slotCollect(:,m-1),zeros(4096,1),cfgInfo);
-        else
-            [SymbolOut,SymbolOutWithEQ]=Slot2SymbolWithEQ(slotCollect(:,m),slotCollect(:,m-1),slotCollect(:,m+1),cfgInfo);
-        end
-        slotUpCollectTime(:,posUp)=SymbolOutWithEQ;
-        for n=1:symNum
-            slotFFTout=fft(SymbolOutWithEQ(:,n));
-            slotFFTout1=fftshift(slotFFTout);
-            slotUpCollectFreq(:,(upcnt-1)*symNum+n)=slotFFTout1;
-        end
-        upcnt=upcnt+1;
-        
-    end
-    
-    
-end
+%% search slot up dmrs position
+% step 1: generate 3276 * 14 * 20  slot  dmrs signal
 
 if Debug_view==1
     %% start Timing &Freqency domain analsys
