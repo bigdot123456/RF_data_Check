@@ -118,7 +118,13 @@ if view_time==1
     end
 end
 
-coeff = phase_coeff;
+%% Gen DMRS data
+CellID=174;
+nLayer=2;
+[DMRSDataFrq,DMRSDataTime,DMRSDataSN]=GenAllSlotDMRS(CellID,nLayer);
+
+% phase compensation data, 14 symbol data, if rx data,should compensate it.
+PhaseCompCoef = phase_coeff;
 %%
 % figure;
 % plot(20*log10(abs(fd_35)),'.');
@@ -139,8 +145,10 @@ if view_time==1
     figure('NumberTitle', 'on', 'Name', str);
     titlestr=sprintf("Timing Pan View of Ant data with %d slot",maxViewSlotNum);
     
-    viewData=tAntData(fullViewRange,:);
-    viewDataAbs=abs(viewData);
+    ViewData=tAntData(fullViewRange,:);
+    [SyncPos,FreqOffset]=InitSync(ViewData,DMRSDataTime,nLayer);
+
+    viewDataAbs=abs(ViewData);
     title(titlestr);
     
     if AntNum==4
@@ -297,7 +305,7 @@ if view_time==1
             cp=288;
             offset=(len+cp)*(14-viewSymbNum-1);
             symb=Ant_view(end-offset-cp/2+1:end-offset-cp/2+len);
-            symbPC0=symb.*coeff(2);
+            symbPC0=symb.*PhaseCompCoef(2);
             %( OrigValue, FixPtDataType, FixPtScaling, RndMeth, DoSatur )
             % num2fixpt(19.875, sfix(8), 2^-2, 'Floor', 'on')
             % coeff=num2fixpt(coeff0,sfix(16),2^-15, 'Floor', 'on');
