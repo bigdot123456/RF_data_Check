@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function DMRSsignal = DMRS_base_seq_generation(indexSlotInFrame, ...
+function [DMRSsignal,DMRSSN] = DMRS_base_seq_generation(indexSlotInFrame, ...
     DMRSSymbolPos, nSCID, N_nSCID_ID, RBMax)
 % initial value of PRBS for reference signal
 % Support single-symbol DMRS
@@ -13,4 +13,6 @@ sequenceLength = 2 * 6 * RBMax; % 4m/6m, To be modified
 m = 1:2:sequenceLength;
 DMRSsignal = ((1 - 2 * glodsequence(m)) + ...
     1j * (1 - 2 * glodsequence(m+1))) / sqrt(2);
+DMRSSN = ((1 - 2 * glodsequence(m)) + ...
+    1j * (1 - 2 * glodsequence(m+1)));
 end

@@ -1,6 +1,6 @@
-function [DMRSData]=GenAllSlotDMRS(CellID,nLayer)
+function [DMRSDataFrq,DMRSDataTime,DMRSDataSN]=GenAllSlotDMRS(CellID,nLayer)
 %% generate Slot DMRS signal and save it to mat
-% function [DMRSData]=GenAllSlotDMRS(CellID,nLayer
+% function [DMRSDataFrq,DMRSDataTime,DMRSDataSN]=GenAllSlotDMRS(CellID,nLayer)
 % DMRSData is 3276*14*20 Complex Data
 if nargin==0
     CellID=174;
@@ -9,6 +9,7 @@ elseif nargin==1
     nLayer=2;
 end
 
+nFFT=4096;
 nPRB=273;
 nSC=12;
 nSymb=14;
@@ -20,38 +21,41 @@ nSCID=0;
 %belong{0,1} nSCID
 RBMax = nPRB;
 
-DMRSData=zeros(nPRB*nSC,nSymb,nSlot);
-portnumber = nLayer;%nrSRSParameters.sysConst.NSRS_ap;
+% only 1632=3276/2 sc
+DMRSLen=nPRB*nSC/2;
+DMRSDataSN=zeros(DMRSLen,nSymb,nSlot);
+DMRSDataFrq=zeros(DMRSLen,nSymb,nSlot);
+DMRSDataTime=zeros(nFFT,nSymb,nSlot,nLayer);
 
-for indexSlotInFrame=0:nSlot-1
+%fact = SimParam.MaxSCS/SimParam.SCS;
+%RB_shift = SimParam.SCS_k0-SimParam.MAXRBNUM*6 + FFTLen/2;
+RB_shift = -RBMax*6 + nFFT/2;
+DMRSPos = RB_shift +1: 2 :RB_shift + DMRSLen *2;
+%pos=1:nPRB*nSC/2;
+%% only valid for port 1000, 1002
+
+for indexSlotInFrame=1:nSlot
     for DMRSSymbolPos = 1:nSymb
-        base_seq = DMRS_base_seq_generation(indexSlotInFrame, ...
+        % DMRS_base_seq_generation use base-1
+        [base_seq,base_sn] = DMRS_base_seq_generation(indexSlotInFrame, ...
             DMRSSymbolPos, nSCID, N_nSCID_ID, RBMax);
-    end
-    
-    dlDMRSSignal = zeros(length(base_seq), portnumber);
-    index_dlDMRS = zeros(length(base_seq), portnumber);
-    even_index = 2:2:length(base_seq);
-    odd_index = 1:2:length(base_seq);
+        DMRSDataFrq(:,DMRSSymbolPos,indexSlotInFrame)=base_seq;
+        DMRSDataSN(:,DMRSSymbolPos,indexSlotInFrame)=base_sn;
+        DMRSDataTimeFFTIn=zeros(nFFT,nLayer);
         
-    for portnumber_i=1:portnumber
-        dlDMRSSignal(even_index,portnumber_i) = nrSRSParameters.port1000_table.w_k_1(portnumber_i)*base_seq(even_index);
-        dlDMRSSignal(odd_index,portnumber_i) = nrSRSParameters.port1000_table.w_k_0(portnumber_i)*base_seq(odd_index);
+        for Layer=1:nLayer
+            posLayer=(Layer-1)+DMRSPos;
+            DMRSDataTimeFFTIn(posLayer,Layer)=base_seq;
+            DMRSDataTime0= ifft(fftshift(DMRSDataTimeFFTIn(:,Layer)));
+            DMRSDataTime(:,DMRSSymbolPos,indexSlotInFrame,Layer)=DMRSDataTime0;
+        end
     end
-    
 end
 
-if ismember(l, l_dmrs)
-    r_dmrs = nr_38_211_sch_dmrs_gen_symbol(n_PRB_start, n_PRB_sched, N_layer, antenna_ports, tpmi, slot_num, l, higher_layer_params.UL_DMRS_config_type, higher_layer_params.PUSCH_tp, higher_layer_params.UL_DMRS_Scrambling_ID(2), higher_layer_params.UL_DMRS_Scrambling_ID(1));
-    for ap = 1 : N_ap
-        k_dmrs = nr_38_211_sch_dmrs_re_mapping(n_PRB_start, n_PRB_sched, higher_layer_params.UL_DMRS_config_type, antenna_ports(ap));
-        a(k_dmrs+1,l+1,ap) = r_dmrs(:,ap);
-    end
-else
-    for ap = 1 : N_ap
-        a(k,l+1,ap) = z(z_idx:z_idx+n_PRB_sched*frame_cfg.N_sc_RB-1,ap);
-    end
-    z_idx = z_idx + n_PRB_sched*frame_cfg.N_sc_RB;
-end
+% r_dmrs = nr_38_211_sch_dmrs_gen_symbol(n_PRB_start, n_PRB_sched, N_layer, antenna_ports, tpmi, slot_num, l, higher_layer_params.UL_DMRS_config_type, higher_layer_params.PUSCH_tp, higher_layer_params.UL_DMRS_Scrambling_ID(2), higher_layer_params.UL_DMRS_Scrambling_ID(1));
+% for ap = 1 : N_ap
+%     k_dmrs = nr_38_211_sch_dmrs_re_mapping(n_PRB_start, n_PRB_sched, higher_layer_params.UL_DMRS_config_type, antenna_ports(ap));
+%     a(k_dmrs+1,l+1,ap) = r_dmrs(:,ap);
+% end
 
 end

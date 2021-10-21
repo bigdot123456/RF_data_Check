@@ -1,6 +1,7 @@
 function coeff = phase_coeff(centralFreqHz,trx)
 if nargin==0
-    centralFreqHz=2566890000;
+%    centralFreqHz=2566890000;
+    centralFreqHz=3549540000;
     trx=1;
 elseif nargin==1
     trx=1;
