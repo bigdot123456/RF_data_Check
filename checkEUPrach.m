@@ -10,7 +10,9 @@ t=now;
 datestr(t,0)
 
 global Debug_view Debug_view_Freq Debug_view3D Debug_view_constellation Debug_slotSTO_CFO Debug_slotSTO_CFO_More Debug_slotSTO_CFO_symblo_diff
-
+global  Debug_InitSync
+Debug_InitSync=1;
+%% const
 len_IQ=1;
 len_slot=14;
 len_scp=288;
@@ -74,7 +76,7 @@ fF='~/Downloads/f0_ddr_data.txt'; % in shelf box,10m,bin format
 % %tF='./File.iq/File_2021-10-08090021.complex.1ch.float32'
 % tF='/Volumes/ORAN/L1/chendalong/1011_1848/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
 % tF='/Volumes/ORAN/L1/chendalong/1012_1113/t1_ddr_data.txt'; % in shelf box,0.1m,2 stream
-% 
+%
 % tF='/Volumes/ORAN/L1/chendalong/1014_1442/t1_ddr_data.txt'; % in shelf box,0.1m,4 stream
 % tF='/Volumes/ORAN/L1/chendalong/1014_1505/t0_ddr_data.txt'; % in shelf box,0.1m,4 stream
 % tF='/Volumes/ORAN/L1/chendalong/1014_1505/t3_ddr_data.txt'; % in shelf box,0.1m,4 ant 2 stream
@@ -120,8 +122,10 @@ end
 
 %% Gen DMRS data
 CellID=174;
-nLayer=2;
-[DMRSDataFrq,DMRSDataTime,DMRSDataSN]=GenAllSlotDMRS(CellID,nLayer);
+nLayer=1;
+upSlot=8;
+
+%[DMRSDataFrq,DMRSDataTime,DMRSDataSN]=GenAllSlotDMRS(CellID,nLayer);
 
 % phase compensation data, 14 symbol data, if rx data,should compensate it.
 PhaseCompCoef = phase_coeff;
@@ -146,8 +150,10 @@ if view_time==1
     titlestr=sprintf("Timing Pan View of Ant data with %d slot",maxViewSlotNum);
     
     ViewData=tAntData(fullViewRange,:);
-    [SyncPos,FreqOffset]=InitSync(ViewData,DMRSDataTime,nLayer);
-
+    
+    
+    [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(tAntData,upSlot,CellID,nLayer);
+    
     viewDataAbs=abs(ViewData);
     title(titlestr);
     
