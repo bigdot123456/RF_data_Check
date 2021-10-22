@@ -47,6 +47,7 @@ OFDMParam.SearchLen=SearchLen;
 load('pusch175.mat');
 tAntData=pusch1L_Cell175_Ideal.waveform;
 tAntData=pusch2L_Cell175_Ideal.waveform;
+tAntData=pusch2L_Cell175_SNR20.waveform;
 
 tF='/Volumes/ORAN/L1/chendalong/1019_0952/t2_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
 

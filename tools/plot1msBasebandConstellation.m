@@ -94,7 +94,7 @@ for i=1:14
     title(str);
     %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
     grid on;
-    axis([0,4096,0,Scale]);
+    %axis([0,4096,0,Scale]);
 end
 str=sprintf('Plot slot %d Freqency spectrum',2*slot_num+1);
 figure('NumberTitle', 'on', 'Name', str);
@@ -112,7 +112,7 @@ for i=1:14
     title(str);
     %rectangle('Position',[-1, -1, 2, 2],'Curvature',[1, 1]);axis equal; % 画圆
     grid on;
-    axis([0,4096,0,Scale]);
+%    axis([0,4096,0,Scale]);
 end
 %% set basic data
 f_use=3276;

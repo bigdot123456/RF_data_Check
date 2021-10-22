@@ -31,8 +31,8 @@ xCorLen=63;
 xCorTimes=MatchLen/xCorLen;
 
 SearchLen=length(ViewData);
-step=16;
-stepShift=13;
+step=8;
+stepShift=3;
 SearchRange=1:step:SearchLen;
 c_max=zeros(nSlot,nLayer);
 posSymb=zeros(nSlot,nLayer);
