@@ -27,13 +27,17 @@ DMRSPosP0=DMRSPos;
 DMRSPosP2=DMRSPos+1;
 
 MatchLen=length(DMRSDataSN(:,1,1));
+xCorLen=63;
+xCorTimes=MatchLen/xCorLen;
+
 SearchLen=length(ViewData);
-step=1;
-stepShift=1;
+step=16;
+stepShift=13;
 SearchRange=1:step:SearchLen;
 c_max=zeros(nSlot,nLayer);
 posSymb=zeros(nSlot,nLayer);
-c_view=zeros(length(SearchRange),nSlot,nLayer);
+c_view=zeros(length(SearchRange),xCorTimes,nSlot,nLayer);
+c_abs=zeros(length(SearchRange),1);
 
 d_max=zeros(1,nLayer);
 d_pos=zeros(1,nLayer);
@@ -58,11 +62,16 @@ for Layer=1:nLayer
             matchDataFre=fftshift(fft(matchData));
             matchDataFreDMRS=matchDataFre(DMRSPosP0);
             y=DMRSSync.*conj(matchDataFreDMRS);
-            z=sum(y);
-            c_view(inx,SlotIdx,Layer)=z;
+            for ixCor=1:xCorTimes
+                posXcor=(ixCor-1)*xCorLen+(1:xCorLen);
+                z=sum(y(posXcor));
+                c_view(inx,ixCor,SlotIdx,Layer)=z;
+            end
+            c1=abs(c_view(inx,:,SlotIdx,Layer));
+            c2=sum(c1);
+            c_abs(inx)=c2;
             inx=inx+1;
         end
-        c_abs=abs(c_view(:,SlotIdx,Layer));
         
         [c_max(SlotIdx,Layer),posSymb(SlotIdx,Layer)]=max(c_abs);
         str=sprintf('L%d s%d max:%d pos:%d\n',Layer,SlotIdx-1,c_max(SlotIdx,Layer),posSymb(SlotIdx,Layer));
@@ -90,31 +99,12 @@ fprintf("Freq offset origin data is %f+1i*%f\n",real(slot8_xcorr),imag(slot8_xco
 
 %PosDMRSRx=posSync-1+(1:4096);
 %% fine Sync Search
-DMRSDataTimeSlot8=DMRSDataSN(:,DMRSpos,d_pos,:);
-% fine sync
-N_table = -64:64;
-Rcorr_fftTem = zeros(length(N_table),nLayer);
-Rcorr_k0=zeros(length(N_table),nLayer);
 
-for Layer=1:nLayer
-    for k=N_table
-        Pos=posSync-1+(1:4096)+k;
-        DMRSRxData=ViewData(Pos,Layer);
-        Rcorr=DMRSRxData.*conj(DMRSDataTimeSlot8);
-        Rcorr_fft=fftshift(fft(Rcorr));
-        inx=k-N_table(1)+1;
-        Rcorr_k0(inx,Layer)=sum(Rcorr);
-        Rcorr_fftTem(inx,Layer) =max(abs(Rcorr_fft));
-    end
-end
-
-[~,pos]=max(abs(Rcorr_k0(:,Layer)));
-SyncSlotInnerPos=posSync-1+pos+N_table(1);
 
 if Debug_InitSync==1
     str=sprintf('Fine Sync search view');
     figure('NumberTitle', 'on', 'Name', str);
-    titlestr=sprintf("Correlated result with %d & abspos:%d",pos,SyncSlotInnerPos);
+    titlestr=sprintf("Correlated result with %d & abspos:%d",pos,1);%ßSyncSlotInnerPos);
     title(titlestr);
     
     str=sprintf("Fine sync with [-64,64], slot is %d with pos %d\n",d_pos-1,pos);

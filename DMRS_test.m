@@ -41,8 +41,12 @@ OFDMParam.len_fft=len_fft;
 OFDMParam.prb_len=prb_len;
 OFDMParam.SearchLen=SearchLen;
 %% load data
-load('pusch_270RB_cid174.mat');
-tAntData=pusch_270RB_cid174.waveform;
+%load('pusch_270RB_cid174.mat');
+%tAntData=pusch_270RB_cid174.waveform;
+
+load('pusch175.mat');
+tAntData=pusch1L_Cell175_Ideal.waveform;
+tAntData=pusch2L_Cell175_Ideal.waveform;
 
 tF='/Volumes/ORAN/L1/chendalong/1019_0952/t2_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
 
@@ -70,11 +74,12 @@ end
 
 %% test CellID
 upSlot=8;
-
 nLayer=1;
-for i=174%0:1023
+for i=175%0:1023
     CellID=i;
-%    [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(tAntData,upSlot,CellID,nLayer);
+    fprintf('Be careful: CellID %d must be correct with dmrs!\n',CellID);
+
+    [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(tAntData(:,:),upSlot,CellID,nLayer);
     [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot2Ant(tAntData,upSlot,CellID);
 end
 % %% get pusch signal for test
