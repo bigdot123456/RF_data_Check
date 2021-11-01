@@ -50,8 +50,9 @@ tAntData=pusch2L_Cell175_Ideal.waveform;
 tAntData=pusch2L_Cell175_SNR20.waveform;
 
 tF='/Volumes/ORAN/L1/chendalong/1019_0952/t2_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+tF='/Volumes/ORAN/L1/chendalong/1030_1606/t0_ddr_data.txt'; % in shelf box,0.1m,2 ant 1 stream
 
-view_time=0;
+view_time=1;
 view_freq=0;
 
 %RS8900=1; % 1: use R&S instrument,0: EU get data
@@ -75,7 +76,7 @@ end
 
 %% test CellID
 upSlot=8;
-nLayer=1;
+nLayer=2;
 for i=175%0:1023
     CellID=i;
     fprintf('Be careful: CellID %d must be correct with dmrs!\n',CellID);

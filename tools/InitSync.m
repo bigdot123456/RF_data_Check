@@ -24,16 +24,17 @@ c_view=zeros(SearchLen,nSlot,nLayer);
 d_max=zeros(1,nLayer);
 d_pos=zeros(1,nLayer);
 
-if Debug_InitSync==1
-    str=sprintf('Plot DMRS init Sync view');
-    figure('NumberTitle', 'on', 'Name', str);
-    titlestr=sprintf("Timing Pan View of Ant data with %d point",SearchLen);
-    title(titlestr);
-end
 
 %method selector
 method=1;
 for Layer=1:nLayer
+    if Debug_InitSync==1
+    str=sprintf('Plot Layer%d DMRS init Sync view',Layer);
+    figure('NumberTitle', 'on', 'Name', str);
+    titlestr=sprintf("Timing Pan View of Ant data with %d point",SearchLen);
+    title(titlestr);
+    end
+
     for SlotIdx = 1:nSlot
         DMRSSync=DMRSDataTime(:,DMRSpos,SlotIdx,Layer);
         x=[ViewData(:,Layer);zeros(MatchLen,1)];
@@ -60,7 +61,7 @@ for Layer=1:nLayer
         
         if Debug_InitSync==1
             subplot(4,5,SlotIdx);
-            plot(c_abs,'b');
+            plot(c_abs,'b'+Layer);
             grid on;
             %str=sprintf('slot%d max:%d pos:%d',SlotIdx-1,c_max(SlotIdx,Layer),c_pos(SlotIdx,Layer));
             title(str);
@@ -79,8 +80,9 @@ FreqOffset=angle(slot8_xcorr);
 fprintf("Freq offset origin data is %f+1i*%f\n",real(slot8_xcorr),imag(slot8_xcorr));
 
 %PosDMRSRx=posSync-1+(1:4096);
-
-DMRSDataTimeSlot8=DMRSDataTime(:,DMRSpos,d_pos,:);
+for Layer=1:nLayer
+    DMRSDataTimeSlot8(:,nLayer)=DMRSDataTime(:,DMRSpos,d_pos(nLayer),nLayer);
+end
 % fine sync
 N_table = -64:64;
 Rcorr_fftTem = zeros(length(N_table),nLayer);
@@ -88,9 +90,9 @@ Rcorr_k0=zeros(length(N_table),nLayer);
 
 for Layer=1:nLayer
     for k=N_table
-        Pos=posSync-1+(1:4096)+k;
+        Pos=posSync(Layer)-1+(1:4096)+k;
         DMRSRxData=ViewData(Pos,Layer);
-        Rcorr=DMRSRxData.*conj(DMRSDataTimeSlot8);
+        Rcorr=DMRSRxData.*conj(DMRSDataTimeSlot8(:,nLayer));
         Rcorr_fft=fftshift(fft(Rcorr));
         inx=k-N_table(1)+1;
         Rcorr_k0(inx,Layer)=sum(Rcorr);

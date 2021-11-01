@@ -1,12 +1,17 @@
 % DDR data reader
-function AntData=readDDRBinData(filename,tFlag)
+function AntData=readDDRBinData(filename,tFlag,swapAnt23)
 %% read data from csv files
 if nargin==0
     filename = '~/Downloads/t0_ddr_data.txt';
     tFlag=1;
+    swapAnt23=1;
 elseif nargin==1
     tFlag=1;
+    swapAnt23=1;
+elseif nargin==2
+    swapAnt23=1;
 end
+
 bitWidth=16;
 %% set parameter
 if tFlag==1
@@ -57,5 +62,12 @@ for i=1:SLOT_NUM
     end
 end
 
+%% swap ant data
+if(swapAnt23==1)
+   t2=AntData(:,2);
+   t3=AntData(:,3);
+   AntData(:,2)=t3;
+   AntData(:,3)=t2;
+end
 
 end

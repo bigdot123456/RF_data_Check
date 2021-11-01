@@ -91,10 +91,16 @@ tF='/Volumes/ORAN/1018_1422/t1_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
 % tF='/Volumes/ORAN/1018_1422/t3_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
 % tF='/Volumes/ORAN/1018_1422/t4_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
 % tF='/Volumes/ORAN/1018_1422/t5_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
+tF='/Volumes/ORAN/SystemTest/mah/log/2021/202110/27/ultime2frameBad.txt'; % in shelf box,0.1m,4 ant 1 stream
+%tF='/Volumes/ORAN/SystemTest/mah/log/2021/202110/27/ultime2frameGood.txt'; % in shelf box,0.1m,4 ant 1 stream
+% 1. log ultime2frameBad.txt是上行速率差（120-180M）的log，如果需要上行速率更差的log可以重抓。
+% 2. log ultime2frameGood.txt是上行速率好（280-300M）的log。这两个log都是开AMC AM，如果需要更好上行速率log可以尝试固定MCS
+
+tF='/Volumes/ORAN/L1/chendalong/1030_1606/t8_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
 
 View20slot=1;
 
-AntNum=4;
+AntNum=2;
 Debug_view=0;
 Debug_slotSTO_CFO=0;
 Debug_slotSTO_CFO_More=0;
@@ -122,6 +128,8 @@ end
 
 %% Gen DMRS data
 CellID=174;
+CellID=66;%mahe pci
+CellID=175;%wzh pci
 nLayer=1;
 upSlot=8;
 
@@ -145,14 +153,13 @@ fullViewRange=(len_fft+len_scp)*(len_slot*7):(len_fft+len_scp)*(len_slot*10+8);
 %viewData=zeros(fullViewRange,4);
 
 if view_time==1
+    ViewData=tAntData(fullViewRange,:);
+    
+    [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(tAntData,upSlot,CellID,nLayer);
+    
     str=sprintf('Plot All Ant full view');
     figure('NumberTitle', 'on', 'Name', str);
     titlestr=sprintf("Timing Pan View of Ant data with %d slot",maxViewSlotNum);
-    
-    ViewData=tAntData(fullViewRange,:);
-    
-    
-    [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(tAntData,upSlot,CellID,nLayer);
     
     viewDataAbs=abs(ViewData);
     title(titlestr);

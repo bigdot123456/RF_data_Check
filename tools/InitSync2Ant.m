@@ -109,7 +109,7 @@ if Debug_InitSync==1
     
     str=sprintf("Fine sync with [-64,64], slot is %d with pos %d\n",d_pos-1,pos);
     
-    plot(Rcorr_fftTem,'b');
+%    plot(Rcorr_fftTem,'b');
     grid on;
     title(str);
     
