@@ -1,4 +1,4 @@
-function [SyncSlotPos,SyncSlotInnerPos,FreqOffset]=InitSync(ViewData,DMRSDataTime,nLayer)
+function [SyncSlotPos,SyncSlotInnerPos,FreqOffset]=InitSync(ViewData,DMRSDataTime,nLayer,fastView)
 %% use it to get initial sync data info
 % [SyncSlotPos,SyncSlotInnerPos,FreqOffset]=InitSync(ViewData,DMRSDataTime,nLayer)
 % len=length(viewData);
@@ -10,6 +10,10 @@ function [SyncSlotPos,SyncSlotInnerPos,FreqOffset]=InitSync(ViewData,DMRSDataTim
 %     end
 %     [~,SlotId] = max(Rcorr2);
 global  Debug_InitSync
+
+if nargin<4
+    fastView=1;
+end
 
 DMRSpos=3;
 nSlot=20;
@@ -24,18 +28,22 @@ c_view=zeros(SearchLen,nSlot,nLayer);
 d_max=zeros(1,nLayer);
 d_pos=zeros(1,nLayer);
 
-
+if fastView==1
+    slotRange=9;
+else
+    slotRange=1:nSlot;
+end
 %method selector
 method=1;
 for Layer=1:nLayer
     if Debug_InitSync==1
-    str=sprintf('Plot Layer%d DMRS init Sync view',Layer);
-    figure('NumberTitle', 'on', 'Name', str);
-    titlestr=sprintf("Timing Pan View of Ant data with %d point",SearchLen);
-    title(titlestr);
+        str=sprintf('Plot Layer%d DMRS init Sync view',Layer);
+        figure('NumberTitle', 'on', 'Name', str);
+        titlestr=sprintf("Timing Pan View of Ant data with %d point",SearchLen);
+        title(titlestr);
     end
-
-    for SlotIdx = 1:nSlot
+    
+    for SlotIdx = slotRange
         DMRSSync=DMRSDataTime(:,DMRSpos,SlotIdx,Layer);
         x=[ViewData(:,Layer);zeros(MatchLen,1)];
         if method==1
@@ -53,14 +61,16 @@ for Layer=1:nLayer
                 c_view(pos,SlotIdx,Layer)=z;
             end
         end
-        c_abs=abs(c_view(:,SlotIdx,Layer)); 
+        c_abs=abs(c_view(:,SlotIdx,Layer));
         
         [c_max(SlotIdx,Layer),posSymb(SlotIdx,Layer)]=max(c_abs);
         str=sprintf('L%d s%d max:%d pos:%d\n',Layer,SlotIdx-1,c_max(SlotIdx,Layer),posSymb(SlotIdx,Layer));
         fprintf(str);
         
         if Debug_InitSync==1
-            subplot(4,5,SlotIdx);
+            if fastView~=1
+                subplot(4,5,SlotIdx);
+            end
             plot(c_abs,'b');
             grid on;
             %str=sprintf('slot%d max:%d pos:%d',SlotIdx-1,c_max(SlotIdx,Layer),c_pos(SlotIdx,Layer));
@@ -100,21 +110,18 @@ for Layer=1:nLayer
     end
 end
 
-[~,pos]=max(abs(Rcorr_k0(:,Layer)));
+%[~,pos]=max(abs(Rcorr_k0(:,Layer)));
+[~,pos]=max(abs(Rcorr_k0));
 SyncSlotInnerPos=posSync-1+pos+N_table(1);
 
 if Debug_InitSync==1
-    str=sprintf('Fine Sync search view');
-    figure('NumberTitle', 'on', 'Name', str);
-    titlestr=sprintf("Correlated result with %d & abspos:%d",pos,SyncSlotInnerPos);
-    title(titlestr);
+    titlestr=sprintf("Correlated result with %d %d &%d %d",pos,SyncSlotInnerPos);
+    figure('NumberTitle', 'on', 'Name', titlestr);
     
-    str=sprintf("Fine sync with [-64,64], slot is %d with pos %d\n",d_pos-1,pos);
-    
-    plot(Rcorr_fftTem,'b');
+    str=sprintf("Fine sync with [-64,64], slot is %d %d with pos %d %d\n",d_pos-1,pos);
+    plot(Rcorr_fftTem);
     grid on;
     title(str);
-
 end
 
 end

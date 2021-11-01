@@ -131,7 +131,7 @@ end
 CellID=174;
 CellID=66;%mahe pci
 CellID=175;%wzh pci
-nLayer=1;
+nLayer=2;
 upSlot=8;
 
 %[DMRSDataFrq,DMRSDataTime,DMRSDataSN]=GenAllSlotDMRS(CellID,nLayer);

@@ -2,7 +2,7 @@ function [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(dat
 %% get pusch signal for test
 % [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(data_timeTem,upSlot,CellID,nLayer)
 % posDMRSOffset is key parameter
-% 
+%
 if nargin<4
     nLayer=2;
 end
@@ -34,16 +34,26 @@ PosView=PosLen+PosSlotOffset;
 %PosView = (1:61440 + 2048) + ((61440 + 2048)*3+8192)*5 + ((61440 + 2048)*3)*3; % 20M
 % PosView = (1:61440 + 2048) + ((61440 + 2048 + 8192)*3)*7 + ((61440 + 2048)*3)*3; % 100M
 % should be format to (1:4096,1)
-ViewData  = data_timeTem(PosView,:);
-
 
 %% get DMRS standard signal
 [DMRSDataFrq,DMRSDataTime,DMRSDataSN]=GenAllSlotDMRS(CellID,nLayer);
 
 %% get syn position
-
-[SyncSlotPos,SyncSlotInnerPos,FreqOffset]=InitSync(ViewData,DMRSDataTime,nLayer);
+% first use tradditonal check, second should swap antenal to check
+ViewDataNoraml  = data_timeTem(PosView,:);
+[SyncSlotPos,SyncSlotInnerPos,FreqOffset]=InitSync(ViewDataNoraml,DMRSDataTime,nLayer);
 posDMRSBest=PosSlotOffset+SyncSlotInnerPos;
 posDMRSBestTheory=PosSlotOffset+(posDMRS-1)*(len_fft+len_scp)+len_lcp+1;
 posDMRSOffset=posDMRSBest-posDMRSBestTheory;
 fprintf('DMRS ideal pos:%d,alg search result %d,offset:%d\n',posDMRSBestTheory,posDMRSBest,posDMRSOffset);
+% swap antennal
+if nLayer==2
+    ViewDataAddtional(:,1)  = data_timeTem(PosView,2);
+    ViewDataAddtional(:,2)  = data_timeTem(PosView,1);
+    
+    [SyncSlotPos,SyncSlotInnerPos,FreqOffset]=InitSync(ViewDataAddtional,DMRSDataTime,nLayer);
+    posDMRSBest=PosSlotOffset+SyncSlotInnerPos;
+    posDMRSBestTheory=PosSlotOffset+(posDMRS-1)*(len_fft+len_scp)+len_lcp+1;
+    posDMRSOffset=posDMRSBest-posDMRSBestTheory;
+    fprintf('Additional DMRS ideal pos:%d,alg search result %d,offset:%d\n',posDMRSBestTheory,posDMRSBest,posDMRSOffset);
+end
