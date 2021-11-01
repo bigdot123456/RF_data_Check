@@ -61,7 +61,7 @@ for Layer=1:nLayer
         
         if Debug_InitSync==1
             subplot(4,5,SlotIdx);
-            plot(c_abs,'b'+Layer);
+            plot(c_abs,'b');
             grid on;
             %str=sprintf('slot%d max:%d pos:%d',SlotIdx-1,c_max(SlotIdx,Layer),c_pos(SlotIdx,Layer));
             title(str);

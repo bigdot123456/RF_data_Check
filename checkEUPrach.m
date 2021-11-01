@@ -97,7 +97,7 @@ tF='/Volumes/ORAN/SystemTest/mah/log/2021/202110/27/ultime2frameBad.txt'; % in s
 % 2. log ultime2frameGood.txt是上行速率好（280-300M）的log。这两个log都是开AMC AM，如果需要更好上行速率log可以尝试固定MCS
 
 tF='/Volumes/ORAN/L1/chendalong/1030_1606/t8_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
-tF='/mnt/oran/L1/chendalong/1030_1606/t8_ddr_data.txt'; % in shelf box,5m
+%tF='/mnt/oran/L1/chendalong/1030_1606/t8_ddr_data.txt'; % in shelf box,5m
 
 View20slot=1;
 
