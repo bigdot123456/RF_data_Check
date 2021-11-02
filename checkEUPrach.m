@@ -98,9 +98,11 @@ tF='/Volumes/ORAN/SystemTest/mah/log/2021/202110/27/ultime2frameBad.txt'; % in s
 
 tF='/Volumes/ORAN/L1/chendalong/1030_1606/t8_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
 %tF='/mnt/oran/L1/chendalong/1030_1606/t8_ddr_data.txt'; % in shelf box,5m
+tF='/Volumes/ORAN/L1/chendalong/11021638/t0_ddr_data.txt'; % in shelf box,5m
 
 View20slot=1;
-
+%antpos=[1 2]; %traditional use 1 2
+antpos=[3 4]; %not 1 2
 AntNum=2;
 Debug_view=0;
 Debug_slotSTO_CFO=0;
@@ -154,9 +156,9 @@ fullViewRange=(len_fft+len_scp)*(len_slot*7):(len_fft+len_scp)*(len_slot*10+8);
 %viewData=zeros(fullViewRange,4);
 
 if view_time==1
-    ViewData=tAntData(fullViewRange,:);
+    ViewData=tAntData(fullViewRange,antpos);
     
-    [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(tAntData,upSlot,CellID,nLayer);
+    [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(tAntData(:,antpos),upSlot,CellID,nLayer);
     
     str=sprintf('Plot All Ant full view');
     figure('NumberTitle', 'on', 'Name', str);
@@ -167,27 +169,27 @@ if view_time==1
     
     if AntNum==4
         subplot(2,2,1);
-        plot(viewDataAbs(:,2),'g');
+        plot(viewDataAbs(:,3),'g');
         hold;grid on;
         plot(viewDataAbs(:,1)+100,'r');
-        plot(-viewDataAbs(:,2),'b');
+        plot(-viewDataAbs(:,3),'b');
         title('ru0 Ant0r ru1 Ant0-b');
         
         subplot(2,2,2);
         plot(viewDataAbs(:,4),'g');
         hold;grid on;
-        plot(viewDataAbs(:,3)+100,'r');
+        plot(viewDataAbs(:,2)+100,'r');
         plot(-viewDataAbs(:,4),'b');
         title('ru0 Ant1r ru1 Ant1-b');
         
         subplot(2,2,3);
         plot(viewDataAbs(:,1),'b');
         hold;grid on;
-        plot(-viewDataAbs(:,3),'r');
+        plot(-viewDataAbs(:,2),'r');
         title('ru0 Ant0b ru0 Ant1-r');
         
         subplot(2,2,4);
-        plot(viewDataAbs(:,2),'b');
+        plot(viewDataAbs(:,3),'b');
         hold;grid on;
         plot(-viewDataAbs(:,4),'r');
         title('ru1 Ant0b ru1 Ant1-r');
@@ -195,28 +197,28 @@ if view_time==1
     elseif AntNum==2
         plot(viewDataAbs(:,1),'b');
         hold;grid on;
-        plot(-viewDataAbs(:,3),'r');
+        plot(-viewDataAbs(:,2),'r');
         title('ru0 Ant0b ru0 Ant1-r');
         
     end
     
     tant1=tAntData(:,1);
-    tant3=tAntData(:,3);
+    tant2=tAntData(:,2);
     
     if AntNum==4
-        tant2=tAntData(:,2);
+        tant3=tAntData(:,3);
         tant4=tAntData(:,4);
     end
     %plot1msSignal(tant0,0);
     %plot1msSignal(tant1,1);
     [slotCollectFreq1,slotUpCollectFreq1]=Process1msSignal(tant1,maxViewSlotNum,1);
-    [slotCollectFreq3,slotUpCollectFreq3]=Process1msSignal(tant3,maxViewSlotNum,3);
+    [slotCollectFreq2,slotUpCollectFreq2]=Process1msSignal(tant2,maxViewSlotNum,3);
     if AntNum==4
-        [slotCollectFreq2,slotUpCollectFreq2]=Process1msSignal(tant2,maxViewSlotNum,2);
+        [slotCollectFreq3,slotUpCollectFreq3]=Process1msSignal(tant3,maxViewSlotNum,2);
         [slotCollectFreq4,slotUpCollectFreq4]=Process1msSignal(tant4,maxViewSlotNum,4);
     end
     if view_timesignal_upslot_freq==1
-        [slotTsLen,UpSymbNum]=size(slotUpCollectFreq3);
+        [slotTsLen,UpSymbNum]=size(slotUpCollectFreq2);
         UpSlotNum=UpSymbNum/len_slot;
         
         view_slot=1:UpSlotNum;
@@ -225,12 +227,12 @@ if view_time==1
         for i=view_slot
             fRange=(i-1)*len_slot+1:i*len_slot;
             Ant_view1=slotUpCollectFreq1(:,fRange);
-            Ant_view3=slotUpCollectFreq3(:,fRange);
-            [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation2Ant(Ant_view1,Ant_view3,i-1);
+            Ant_view2=slotUpCollectFreq2(:,fRange);
+            [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation2Ant(Ant_view1,Ant_view2,i-1);
             if AntNum==4
-                Ant_view2=slotUpCollectFreq2(:,fRange);
+                Ant_view3=slotUpCollectFreq3(:,fRange);
                 Ant_view4=slotUpCollectFreq4(:,fRange);
-                [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation2Ant(Ant_view2,Ant_view4,i-1);
+                [symbol0,symbol_abs0]=plot1SlotFreqencySignalConstellation2Ant(Ant_view3,Ant_view4,i-1);
             end
         end
     end
