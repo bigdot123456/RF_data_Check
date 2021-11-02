@@ -102,7 +102,7 @@ tF='/Volumes/ORAN/L1/chendalong/11021638/t0_ddr_data.txt'; % in shelf box,5m
 
 View20slot=1;
 %antpos=[1 2]; %traditional use 1 2
-antpos=[3 4]; %not 1 2
+%antpos=[3 4]; %not 1 2
 AntNum=2;
 Debug_view=0;
 Debug_slotSTO_CFO=0;
@@ -128,6 +128,10 @@ if view_time==1
         tAntData=readDDRData(tF,1);
     end
 end
+
+%% swap antenal position
+x=tAntData(:,[3 4 1 2]);
+tAntData=x;
 
 %% Gen DMRS data
 CellID=174;
@@ -156,9 +160,9 @@ fullViewRange=(len_fft+len_scp)*(len_slot*7):(len_fft+len_scp)*(len_slot*10+8);
 %viewData=zeros(fullViewRange,4);
 
 if view_time==1
-    ViewData=tAntData(fullViewRange,antpos);
+    ViewData=tAntData(fullViewRange);
     
-    [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(tAntData(:,antpos),upSlot,CellID,nLayer);
+    [SyncSlotPos,SyncSlotInnerPos,posDMRSOffset,FreqOffset]=checkUpSlot(tAntData,upSlot,CellID,nLayer);
     
     str=sprintf('Plot All Ant full view');
     figure('NumberTitle', 'on', 'Name', str);
