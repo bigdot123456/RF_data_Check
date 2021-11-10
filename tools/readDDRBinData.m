@@ -33,7 +33,11 @@ ANT_NUM =4;
 %% read file
 % a=readtable(filename,'Delimiter',' ','ReadVariableNames',false);
 %conver 32bit data to IQ data
-fID = fopen(filename,'r');
+[fID,errMsg] = fopen(filename,'r');
+if fID<0
+    disp(errMsg);
+    error("Can't Open File!")
+end
 IQ=fread(fID,'int16');
 len=floor(length(IQ)/2);
 I0=IQ(1:2:len*2);
