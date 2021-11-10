@@ -21,8 +21,8 @@ format short;
 %% get phase compensation coeffcient
 % centralFreqHz = 3500000000;%中心频点，单位Hz
 % centralFreqHz = 2496000000;%%%ARFCN  499200
-centralFreqHz = 2566890000;%%%ARFCN  513378  移动
-% centralFreqHz = 3549540000;%%%ARFCN  636636  联通
+% centralFreqHz = 2566890000;%%%ARFCN  513378  移动
+centralFreqHz = 3549540000;%%%ARFCN  636636  联通
 coeff = phase_coeff(centralFreqHz,1);%Rx 1;Tx -1
 %% plot slot frequency & constellation result
 symbol=splitSlot2Symbol(Ant_view);

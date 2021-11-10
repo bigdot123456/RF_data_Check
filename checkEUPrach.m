@@ -99,6 +99,8 @@ tF='/Volumes/ORAN/SystemTest/mah/log/2021/202110/27/ultime2frameBad.txt'; % in s
 tF='/Volumes/ORAN/L1/chendalong/1030_1606/t8_ddr_data.txt'; % in shelf box,0.1m,4 ant 1 stream
 %tF='/mnt/oran/L1/chendalong/1030_1606/t8_ddr_data.txt'; % in shelf box,5m
 tF='/Volumes/ORAN/L1/chendalong/11021638/t0_ddr_data.txt'; % in shelf box,5m
+tF='~/ddr_data.txt'; % in CQ data
+tF='~/log/sy/ddr_data1.txt'; % in CQ data
 
 View20slot=1;
 %antpos=[1 2]; %traditional use 1 2
